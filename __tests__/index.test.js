@@ -3,9 +3,9 @@ import {
   useDispatch,
   throttleSelectorResults,
   createSelector,
-  createAsyncSelectorWithCache
+  createAsyncSelectorWithCache,
+  createThrottledSelectorResults
 } from '../dist/index'
-import { createThrottledSelectorResults } from '../dist/createThrottledSelectorResults'
 
 /* random underscore functions */
 const _ = {}
