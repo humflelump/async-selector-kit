@@ -251,6 +251,46 @@ test('createAsyncSelectorResults onResolve, onReject, onCancel', done => {
   }, 50)
 })
 
+test('createAsyncSelectorResults forceUpdate', done => {
+  let state = {
+    text: 'hello'
+  }
+
+  let generatedAction
+  const dispatch = action => {
+    generatedAction = action
+  }
+  useDispatch(dispatch)
+  let count = 0
+  let concat = 'hi '
+  const [getValue, waiting, error, forceUpdate] = createAsyncSelectorResults(
+    {
+      async: async function exampleApi (text) {
+        if (text.length > 10) {
+          throw new Error('Text to long')
+        }
+        await new Promise(res => setTimeout(res, 25))
+        count += 1
+        return concat + text
+      },
+    },
+    [state => state.text]
+  )
+  expect(getValue({ ...state })).toEqual([])
+  expect(count).toBe(0)
+  setTimeout(() => {
+    expect(getValue({ ...state })).toEqual('hi hello')
+    expect(count).toBe(1)
+    concat = 'new '
+    forceUpdate({ ...state })
+    setTimeout(() => {
+      expect(getValue({ ...state })).toEqual('new hello')
+      expect(count).toBe(2)
+      done()
+    }, 50)
+  }, 50)
+})
+
 test('createAsyncSelectorResults throttle shouldUseAsync', done => {
   let state = {
     text: 'hello'

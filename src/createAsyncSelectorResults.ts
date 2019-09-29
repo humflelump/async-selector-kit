@@ -36,7 +36,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, Props = undefined
 }, selectors: []): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, Props = undefined, DefaultValue = []>(params: {
@@ -51,7 +52,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, Props = undefined
 }, selectors: []): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, Props = undefined, DefaultValue = []>(params: {
@@ -66,7 +68,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, Props = undef
 }, selectors: [(state: State) => R1]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, Props = undefined, DefaultValue = []>(params: {
@@ -81,7 +84,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, Props = undef
 }, selectors: [(state: State, props: Props) => R1]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, Props = undefined, DefaultValue = []>(params: {
@@ -96,7 +100,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, Props = u
 }, selectors: [(state: State) => R1, (state: State) => R2]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, Props = undefined, DefaultValue = []>(params: {
@@ -111,7 +116,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, Props = u
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, Props = undefined, DefaultValue = []>(params: {
@@ -126,7 +132,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, Props
 }, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, Props = undefined, DefaultValue = []>(params: {
@@ -141,7 +148,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, Props
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2, (state: State, props: Props) => R3]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, Props = undefined, DefaultValue = []>(params: {
@@ -156,7 +164,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, P
 }, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, Props = undefined, DefaultValue = []>(params: {
@@ -171,7 +180,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, P
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2, (state: State, props: Props) => R3, (state: State, props: Props) => R4]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, Props = undefined, DefaultValue = []>(params: {
@@ -186,7 +196,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, Props = undefined, DefaultValue = []>(params: {
@@ -201,7 +212,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2, (state: State, props: Props) => R3, (state: State, props: Props) => R4, (state: State, props: Props) => R5]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, Props = undefined, DefaultValue = []>(params: {
@@ -216,7 +228,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, Props = undefined, DefaultValue = []>(params: {
@@ -231,7 +244,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2, (state: State, props: Props) => R3, (state: State, props: Props) => R4, (state: State, props: Props) => R5, (state: State, props: Props) => R6]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, R7, Props = undefined, DefaultValue = []>(params: {
@@ -246,7 +260,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, R7, Props = undefined, DefaultValue = []>(params: {
@@ -261,7 +276,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2, (state: State, props: Props) => R3, (state: State, props: Props) => R4, (state: State, props: Props) => R5, (state: State, props: Props) => R6, (state: State, props: Props) => R7]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, R7, R8, Props = undefined, DefaultValue = []>(params: {
@@ -276,7 +292,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, R7, R8, Props = undefined, DefaultValue = []>(params: {
@@ -291,7 +308,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2, (state: State, props: Props) => R3, (state: State, props: Props) => R4, (state: State, props: Props) => R5, (state: State, props: Props) => R6, (state: State, props: Props) => R7, (state: State, props: Props) => R8]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, R7, R8, R9, Props = undefined, DefaultValue = []>(params: {
@@ -306,7 +324,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8, (state: State) => R9]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, R7, R8, R9, Props = undefined, DefaultValue = []>(params: {
@@ -321,7 +340,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2, (state: State, props: Props) => R3, (state: State, props: Props) => R4, (state: State, props: Props) => R5, (state: State, props: Props) => R6, (state: State, props: Props) => R7, (state: State, props: Props) => R8, (state: State, props: Props) => R9]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, Props = undefined, DefaultValue = []>(params: {
@@ -336,7 +356,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8, (state: State) => R9, (state: State) => R10]): [
     (state: State) => AsyncReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | null
+    (state: State) => any | null,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, Props = undefined, DefaultValue = []>(params: {
@@ -351,7 +372,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 }, selectors: [(state: State, props: Props) => R1, (state: State, props: Props) => R2, (state: State, props: Props) => R3, (state: State, props: Props) => R4, (state: State, props: Props) => R5, (state: State, props: Props) => R6, (state: State, props: Props) => R7, (state: State, props: Props) => R8, (state: State, props: Props) => R9, (state: State, props: Props) => R10]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null
+    (state: State, props: Props) => any | null,
+    (state: State, props: Props) => void
   ];
 
 
@@ -403,6 +425,7 @@ export function createAsyncSelectorResults(params, selectors: any = []) {
   return [
     results,
     isWaiting,
-    error as Function
+    error as Function,
+    asyncSelector.forceUpdate,
   ];
 }

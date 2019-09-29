@@ -123,7 +123,8 @@ function createAsyncSelectorResults(params, selectors) {
     return [
         results,
         isWaiting,
-        error
+        error,
+        asyncSelector.forceUpdate,
     ];
 }
 exports.createAsyncSelectorResults = createAsyncSelectorResults;

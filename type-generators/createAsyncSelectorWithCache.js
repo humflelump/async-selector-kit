@@ -22,7 +22,8 @@ export function createAsyncSelectorWithCache<AsyncReturn, CacheReturn, State, ${
 }, selectors: [${list(n).map(n => `(state: State) => R${n}`)}]): [
     (state: State) => AsyncReturn | CacheReturn | DefaultValue,
     (state: State) => boolean,
-    (state: State) => any | undefined
+    (state: State) => any | undefined,
+    (state: State) => void
   ];
 
 export function createAsyncSelectorWithCache<AsyncReturn, CacheReturn, State, ${list(n).map(n => `R${n}`)}${n == 0 ? '' : ', '}Props, DefaultValue = []>(params: {
@@ -38,7 +39,8 @@ export function createAsyncSelectorWithCache<AsyncReturn, CacheReturn, State, ${
 }, selectors: [${list(n).map(n => `(state: State, props: Props) => R${n}`)}]): [
     (state: State, props: Props) => AsyncReturn | CacheReturn | DefaultValue,
     (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | undefined
+    (state: State, props: Props) => any | undefined,
+    (state: State) => void
   ];
 `
 }
