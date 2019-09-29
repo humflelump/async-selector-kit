@@ -1,2 +1,6 @@
-# async-selector-kit
-An opinionated API to simplify using async-selector
+# Installation
+
+```
+npm install --save async-selector-kit
+```
+
