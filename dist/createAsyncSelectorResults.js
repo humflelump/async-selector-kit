@@ -80,10 +80,10 @@ function createAsyncSelectorResults(params, selectors) {
     idSet.add(id);
     var asyncSelector = async_selector_1.default(__assign(__assign({}, params), { onResolve: function (_a) {
             var result = _a.result, took = _a.took;
-            useDispatch_1.getDispatcher()(actions_1.promiseResolved(result, took, params.id));
+            useDispatch_1.getDispatcher(id)(actions_1.promiseResolved(result, took, params.id));
             params.onResolve && params.onResolve(result);
         }, onReject: function (error) {
-            useDispatch_1.getDispatcher()(actions_1.promiseRejected(error, params.id));
+            useDispatch_1.getDispatcher(id)(actions_1.promiseRejected(error, params.id));
             params.onReject && params.onReject(error);
         }, async: function () {
             var vals = [];

@@ -384,11 +384,11 @@ export function createAsyncSelectorResults(params, selectors: any = []) {
   const asyncSelector = createAsyncSelector({
     ...params,
     onResolve: ({ result, took }) => {
-      getDispatcher()(promiseResolved(result, took, params.id));
+      getDispatcher(id)(promiseResolved(result, took, params.id));
       params.onResolve && params.onResolve(result);
     },
     onReject: (error) => {
-      getDispatcher()(promiseRejected(error, params.id));
+      getDispatcher(id)(promiseRejected(error, params.id));
       params.onReject && params.onReject(error);
     },
     async: async (...vals) => {
