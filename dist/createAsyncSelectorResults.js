@@ -75,15 +75,15 @@ function validate(params, selectors, id, idSet) {
 function createAsyncSelectorResults(params, selectors) {
     var _this = this;
     if (selectors === void 0) { selectors = []; }
-    var id = params.id || 'ASYNC_SELECTOR_' + (++createdCount);
+    var id = params.id || "ASYNC_SELECTOR_" + ++createdCount;
     validate(params, selectors, id, idSet);
     idSet.add(id);
     var asyncSelector = async_selector_1.default(__assign(__assign({}, params), { onResolve: function (_a) {
             var result = _a.result, took = _a.took;
-            useDispatch_1.getDispatcher(id)(actions_1.promiseResolved(result, took, params.id));
+            useDispatch_1.getDispatcher(id)(actions_1.promiseResolved(result, took, id));
             params.onResolve && params.onResolve(result);
         }, onReject: function (error) {
-            useDispatch_1.getDispatcher(id)(actions_1.promiseRejected(error, params.id));
+            useDispatch_1.getDispatcher(id)(actions_1.promiseRejected(error, id));
             params.onReject && params.onReject(error);
         }, async: function () {
             var vals = [];

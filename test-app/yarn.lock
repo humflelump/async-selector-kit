@@ -1545,9 +1545,9 @@ async-limiter@~1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
 
-async-selector-kit@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/async-selector-kit/-/async-selector-kit-1.0.2.tgz#ae1dc22b9efddc1ce7e7b3361b5636df95865785"
+async-selector-kit@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/async-selector-kit/-/async-selector-kit-1.0.4.tgz#a98323a4c2c9bea5306714f6f056c4459c225c76"
   dependencies:
     async-selector "^1.0.24"
     reselect "^4.0.0"
