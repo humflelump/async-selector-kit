@@ -378,17 +378,17 @@ export function createAsyncSelectorResults<AsyncReturn, State, R1, R2, R3, R4, R
 
 
 export function createAsyncSelectorResults(params, selectors: any = []) {
-  const id = params.id || 'ASYNC_SELECTOR_' + (++createdCount);
+  const id = params.id || `ASYNC_SELECTOR_${++createdCount}`;
   validate(params, selectors, id, idSet);
   idSet.add(id);
   const asyncSelector = createAsyncSelector({
     ...params,
     onResolve: ({ result, took }) => {
-      getDispatcher(id)(promiseResolved(result, took, params.id));
+      getDispatcher(id)(promiseResolved(result, took, id));
       params.onResolve && params.onResolve(result);
     },
     onReject: (error) => {
-      getDispatcher(id)(promiseRejected(error, params.id));
+      getDispatcher(id)(promiseRejected(error, id));
       params.onReject && params.onReject(error);
     },
     async: async (...vals) => {
