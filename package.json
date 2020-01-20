@@ -1,6 +1,6 @@
 {
   "name": "async-selector-kit",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "An opinionated API to simplify using async-selector",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/humflelump/async-selector.git"
+    "url": "git+https://github.com/humflelump/async-selector-kit.git"
   },
   "keywords": [
     "async",
