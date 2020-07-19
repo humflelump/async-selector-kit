@@ -933,18 +933,16 @@ export function createAsyncAction(params: any, selectors?: any[]) {
   const transform = func => (...params1) => (actionState, ...params2) => {
     const oldPromise = func(...params1)(...params2);
     return new Promise((res, rej) => {
-      if (actionStates[idCounter - 1]) {
-        actionStates[idCounter - 1].cancelled = true;
-        actionStates[idCounter - 1].onCancel();
-        delete actionStates[idCounter - 1];
+      if (actionStates[mostRecentAction]) {
+        actionStates[mostRecentAction].cancelled = true;
+        actionStates[mostRecentAction].onCancel();
+        delete actionStates[mostRecentAction - 1];
       }
       loading = true;
-      console.log("newPromise", idCounter, Object.keys(actionStates));
-
-      actionStates[idCounter] = actionState;
-      actionState.id = idCounter;
-
       const actionCallId = ++idCounter;
+      actionStates[actionCallId] = actionState;
+      actionState.id = actionCallId;
+
       let t = Date.now();
       mostRecentAction = actionCallId;
 

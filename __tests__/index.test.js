@@ -451,7 +451,6 @@ test("throttleSelectorResults", done => {
 });
 
 test("createThrottledSelectorResults", done => {
-  // useDispatch(console.log)
 
   let callCount = 0;
   const [getValue, waiting] = createThrottledSelectorResults(
@@ -614,11 +613,9 @@ test("createAsyncAction", done => {
   const [action, loading, error] = createAsyncAction({
     id: "my-action",
     async: (store, status) => async input => {
-      console.log("hihihihih", store, status);
       status.onCancel = () => {
         cancelCount += 1;
       };
-      console.log("hrumph");
       store_ = store;
       input_ = input;
       await new Promise(res => setTimeout(res, 50));
@@ -633,12 +630,9 @@ test("createAsyncAction", done => {
   expect(typeof status.onCancel).toEqual("function");
   setTimeout(() => {
     try {
-      console.log("whaaaaat", store_);
       expect(typeof store_).toEqual("object");
       expect(input_).toEqual("hello");
-      console.log("before action");
       action("wow");
-      console.log("after action");
       expect(loading(state)).toEqual(true);
       expect(error(state)).toEqual(undefined);
       expect(status.cancelled).toEqual(true);
@@ -736,7 +730,6 @@ test("createAsyncAction debounced", done => {
       setTimeout(() => {
         //20
         try {
-          console.log(actions);
           expect(loading(state)).toEqual(true);
           expect(actions[1].type).toEqual(ACTION_STARTED);
           expect(actions[1].inputs[0]).toEqual("wow2");

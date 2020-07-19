@@ -54,16 +54,15 @@ function createAsyncAction(params, selectors) {
             }
             var oldPromise = func.apply(void 0, params1).apply(void 0, params2);
             return new Promise(function (res, rej) {
-                if (actionStates[idCounter - 1]) {
-                    actionStates[idCounter - 1].cancelled = true;
-                    actionStates[idCounter - 1].onCancel();
-                    delete actionStates[idCounter - 1];
+                if (actionStates[mostRecentAction]) {
+                    actionStates[mostRecentAction].cancelled = true;
+                    actionStates[mostRecentAction].onCancel();
+                    delete actionStates[mostRecentAction - 1];
                 }
                 loading = true;
-                console.log("newPromise", idCounter, Object.keys(actionStates));
-                actionStates[idCounter] = actionState;
-                actionState.id = idCounter;
                 var actionCallId = ++idCounter;
+                actionStates[actionCallId] = actionState;
+                actionState.id = actionCallId;
                 var t = Date.now();
                 mostRecentAction = actionCallId;
                 useDispatch_1.getDispatcher(id)(actions_1.actionStarted(params2, actionCallId, id));

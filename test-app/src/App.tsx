@@ -7,6 +7,7 @@ import { createAsyncSelectorResults } from "async-selector-kit";
 import { createSubscription } from "async-selector-kit";
 import { createAsyncAction } from "async-selector-kit";
 import { Store, ActionState } from "../../src/createAsyncAction";
+import { debounce } from "lodash";
 
 const text = (state: State) => state.blah.text as string;
 
@@ -52,9 +53,12 @@ const [action, loadingAction, error] = createAsyncAction(
     id: "wowowowow",
     async: (store, status) => async (val: string, wow: number) => {
       status.onCancel = () => console.log("cancelled");
+      console.log("started", val, wow);
       await new Promise(res => setTimeout(res, 1000));
+      console.log("ended", val, wow);
       return true;
-    }
+    },
+    throttle: f => debounce(f, 2000)
   },
   [(state: State) => state.async]
 );
@@ -72,6 +76,7 @@ const App: React.FC = () => {
         value={text}
         onChange={e => {
           dispatch({ type: "settext", text: e.target.value });
+          action("555", 666);
         }}
       />
       <div>{long}</div>
