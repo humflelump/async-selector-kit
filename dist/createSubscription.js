@@ -1,0 +1,53 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var createMiddleware_1 = require("./createMiddleware");
+var reselect_1 = require("reselect");
+var useDispatch_1 = require("./useDispatch");
+var actions_1 = require("./actions");
+var createdCount = 0;
+function createSubscription(params, selectors) {
+    if (selectors === void 0) { selectors = []; }
+    var onSubscribe = params.onSubscribe, onUnsubscribe = params.onUnsubscribe, onInputsChanged = params.onInputsChanged, onSelectorCalled = params.onSelectorCalled, defaultValue = params.defaultValue;
+    var id = params.id || "SUBSCRIPTION_" + ++createdCount;
+    var states = [];
+    var isSubscribed = false;
+    var value = defaultValue;
+    var prevInputs = null;
+    var selector = reselect_1.createSelector(selectors, function () {
+        var vals = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            vals[_i] = arguments[_i];
+        }
+        onInputsChanged && onInputsChanged(vals, prevInputs);
+        prevInputs = vals;
+    });
+    var setter = function (val) {
+        value = val;
+        useDispatch_1.getDispatcher(id)(actions_1.promiseResolved(value, 0, id));
+    };
+    var setSubscriptionState = function (bool) {
+        if (bool && !isSubscribed) {
+            onSubscribe && onSubscribe(prevInputs, setter);
+        }
+        else if (!bool && isSubscribed) {
+            onUnsubscribe && onUnsubscribe(prevInputs, setter);
+        }
+        isSubscribed = bool;
+    };
+    createMiddleware_1.addNewStateListener(function (state) {
+        setSubscriptionState(states.indexOf(state) !== -1);
+        var index = states.indexOf(state);
+        console.log({ state: state, index: index });
+        for (var i = 0; i < index; i++) {
+            states.shift();
+        }
+    });
+    var returnSelector = function (state) {
+        selector(state);
+        onSelectorCalled && onSelectorCalled(state);
+        states.push(state);
+        return value;
+    };
+    return [returnSelector, setter];
+}
+exports.createSubscription = createSubscription;

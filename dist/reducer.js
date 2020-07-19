@@ -21,6 +21,12 @@ function createReducer() {
         else if (action.type === actions_1.PROMISE_REJECTED) {
             return __assign({}, state);
         }
+        else if (action.type === actions_1.ACTION_STARTED) {
+            return __assign({}, state);
+        }
+        else if (action.type === actions_1.ACTION_FINISHED) {
+            return __assign({}, state);
+        }
         else {
             return state;
         }

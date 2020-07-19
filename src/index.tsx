@@ -14,16 +14,29 @@ import { createReducer } from "./reducer";
 import { useDispatch } from "./useDispatch";
 import { createSelector } from "reselect";
 import { createAsyncSelector } from "async-selector";
-import { createAction } from "./createAction";
+import { createMiddleware } from "./createMiddleware";
+import { createSubscription } from "./createSubscription";
+import { createAsyncAction } from "./createAsyncAction";
+import {
+  ACTION_STARTED,
+  ACTION_FINISHED,
+  actionEnded,
+  actionStarted
+} from "./actions";
 import {
   createAsyncSelectorWithSubscription,
   notifyNewState
 } from "./createAsyncSelectorWithSubscription";
+
 export {
   promiseResolved,
   promiseRejected,
   PROMISE_RESOLVED,
   PROMISE_REJECTED,
+  ACTION_STARTED,
+  ACTION_FINISHED,
+  actionEnded,
+  actionStarted,
   createAsyncSelectorResults,
   createAsyncSelectorWithCache,
   throttleSelector,
@@ -36,5 +49,7 @@ export {
   createAsyncSelector,
   createAsyncSelectorWithSubscription,
   notifyNewState,
-  createAction
+  createMiddleware,
+  createSubscription,
+  createAsyncAction
 };

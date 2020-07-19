@@ -6,7 +6,10 @@ import {
   createAsyncSelectorWithCache,
   createThrottledSelectorResults,
   createAsyncSelectorWithSubscription,
-  createAction
+  createAsyncAction,
+  createMiddleware,
+  ACTION_STARTED,
+  ACTION_FINISHED
 } from "../dist/index";
 
 /* random underscore functions */
@@ -591,33 +594,167 @@ test("createAsyncSelectorWithCache", done => {
 //   manager.setNewIdCallback(() => forceUpdate());
 // });
 
-test("createThrottledSelectorResults", done => {
-  let a = 0;
-  useDispatch(num => {
-    a = num;
-  });
-  const operation = async (dispatch, num) => {
-    await new Promise(res => setTimeout(res, 100));
-    dispatch(num);
+test("createAsyncAction", done => {
+  const state = {
+    name: "mark"
   };
-  const [action, isWaiting, error] = createAction(operation);
-
-  expect(isWaiting()).toEqual(false);
-  expect(error()).toEqual(null);
-  action(5);
-  expect(isWaiting()).toEqual(true);
+  let cancelCount = 0;
+  let store_ = undefined;
+  let input_ = undefined;
+  const actions = [];
+  function createMiddlewareTest() {
+    const middleware = createMiddleware();
+    const store = {
+      getState: () => state,
+      dispatch: action => actions.push(action)
+    };
+    middleware(store)(store.dispatch)({ type: "test" });
+  }
+  createMiddlewareTest();
+  const [action, loading, error] = createAsyncAction({
+    id: "my-action",
+    async: (store, status) => async input => {
+      console.log("hihihihih", store, status);
+      status.onCancel = () => {
+        cancelCount += 1;
+      };
+      console.log("hrumph");
+      store_ = store;
+      input_ = input;
+      await new Promise(res => setTimeout(res, 50));
+      return input;
+    }
+  });
+  expect(loading(state)).toEqual(false);
+  const status = action("hello");
+  expect(loading(state)).toEqual(true);
+  expect(error(state)).toEqual(undefined);
+  expect(status.cancelled).toEqual(false);
+  expect(typeof status.onCancel).toEqual("function");
   setTimeout(() => {
-    action(5);
-    expect(isWaiting()).toEqual(true);
+    try {
+      console.log("whaaaaat", store_);
+      expect(typeof store_).toEqual("object");
+      expect(input_).toEqual("hello");
+      console.log("before action");
+      action("wow");
+      console.log("after action");
+      expect(loading(state)).toEqual(true);
+      expect(error(state)).toEqual(undefined);
+      expect(status.cancelled).toEqual(true);
+      expect(cancelCount).toEqual(1);
+      action("wow2");
+      expect(cancelCount).toEqual(2);
+    } catch (e) {
+      done.fail(e);
+    }
     setTimeout(() => {
-      expect(isWaiting()).toEqual(true);
-      expect(a).toEqual(5);
+      try {
+        expect(loading(state)).toEqual(true);
+        expect(error(state)).toEqual(undefined);
+      } catch (e) {
+        done.fail(e);
+      }
+
       setTimeout(() => {
-        expect(isWaiting()).toEqual(false);
-        expect(a).toEqual(5);
-        expect(error()).toEqual(null);
-        done();
-      }, 65);
-    }, 65);
-  }, 65);
+        try {
+          expect(loading(state)).toEqual(false);
+          expect(actions[1].type).toEqual(ACTION_STARTED);
+          expect(actions[2].type).toEqual(ACTION_STARTED);
+          expect(actions[3].type).toEqual(ACTION_STARTED);
+          expect(actions[4].type).toEqual(ACTION_FINISHED);
+          expect(actions[4].result).toEqual("wow2");
+          done();
+        } catch (e) {
+          done.fail(e);
+        }
+      }, 20);
+    }, 40);
+  }, 25);
+});
+
+test("createAsyncAction debounced", done => {
+  const state = {
+    name: "mark"
+  };
+  let cancelCount = 0;
+  let store_ = undefined;
+  let input_ = undefined;
+  const actions = [];
+  function createMiddlewareTest() {
+    const middleware = createMiddleware();
+    const store = {
+      getState: () => state,
+      dispatch: action => actions.push(action)
+    };
+    middleware(store)(store.dispatch)({ type: "test" });
+  }
+  createMiddlewareTest();
+  const [action, loading, error] = createAsyncAction({
+    id: "my-action",
+    async: (store, status) => async input => {
+      status.onCancel = () => {
+        cancelCount += 1;
+      };
+      store_ = store;
+      input_ = input;
+      await new Promise(res => setTimeout(res, 50));
+      return input;
+    },
+    throttle: f => _.debounce(f, 50)
+  });
+  expect(loading(state)).toEqual(false);
+  const status = action("hello");
+  expect(loading(state)).toEqual(false);
+  expect(error(state)).toEqual(undefined);
+  expect(status.cancelled).toEqual(false);
+  expect(typeof status.onCancel).toEqual("function");
+  setTimeout(() => {
+    // 25
+    try {
+      expect(store_).toEqual(undefined);
+      expect(input_).toEqual(undefined);
+      action("wow");
+      expect(loading(state)).toEqual(false);
+      expect(error(state)).toEqual(undefined);
+      expect(status.cancelled).toEqual(false);
+      expect(cancelCount).toEqual(0);
+      action("wow2");
+      expect(cancelCount).toEqual(0);
+    } catch (e) {
+      done.fail(e);
+    }
+    setTimeout(() => {
+      //40
+      try {
+        expect(loading(state)).toEqual(false);
+        expect(error(state)).toEqual(undefined);
+      } catch (e) {
+        done.fail(e);
+      }
+
+      setTimeout(() => {
+        //20
+        try {
+          console.log(actions);
+          expect(loading(state)).toEqual(true);
+          expect(actions[1].type).toEqual(ACTION_STARTED);
+          expect(actions[1].inputs[0]).toEqual("wow2");
+          setTimeout(() => {
+            // 50
+            try {
+              expect(loading(state)).toEqual(false);
+              expect(actions[2].type).toEqual(ACTION_FINISHED);
+              expect(actions[2].result).toEqual("wow2");
+              done();
+            } catch (e) {
+              done.fail(e);
+            }
+          }, 50);
+        } catch (e) {
+          done.fail(e);
+        }
+      }, 20);
+    }, 40);
+  }, 25);
 });
