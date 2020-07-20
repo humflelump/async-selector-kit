@@ -63,12 +63,18 @@ const [action, loadingAction, error] = createAsyncAction(
   [(state: State) => state.async]
 );
 
+const Sub = () => {
+  useSelector(newSelector);
+  return <div>Sub</div>;
+};
+
 const App: React.FC = () => {
   const text = useSelector((state: State) => state.blah.text);
   const long = useSelector(longText);
   const pending = useSelector(loading);
   const ugh = useSelector(loadingAction);
-  useSelector(newSelector);
+  const visible = useSelector((state: any) => state.blah.show);
+  console.log({ visible });
   const dispatch = useDispatch();
   return (
     <div className="App">
@@ -82,6 +88,14 @@ const App: React.FC = () => {
       <div>{long}</div>
       <div>{pending ? "..." : "done"}</div>
       <div>Loading Action: {ugh ? "true" : "false"}</div>
+      {visible && <Sub />}
+      <button
+        onClick={() => {
+          dispatch({ type: "toggle" });
+        }}
+      >
+        Toggle
+      </button>
     </div>
   );
 };

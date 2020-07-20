@@ -9,7 +9,8 @@ import {
   createAsyncAction,
   createMiddleware,
   ACTION_STARTED,
-  ACTION_FINISHED
+  ACTION_FINISHED,
+  createSubscription
 } from "../dist/index";
 
 /* random underscore functions */
@@ -451,7 +452,6 @@ test("throttleSelectorResults", done => {
 });
 
 test("createThrottledSelectorResults", done => {
-
   let callCount = 0;
   const [getValue, waiting] = createThrottledSelectorResults(
     [state => state.text],
@@ -750,4 +750,47 @@ test("createAsyncAction debounced", done => {
       }, 20);
     }, 40);
   }, 25);
+});
+
+test("createThrottledSelector", done => {
+  // const state = {
+  //   name: "mark"
+  // };
+  // const actions = [];
+  // function createMiddlewareTest() {
+  //   const middleware = createMiddleware();
+  //   const store = {
+  //     getState: () => state,
+  //     dispatch: action => actions.push(action)
+  //   };
+  //   middleware(store)(store.dispatch)({ type: "test" });
+  //   return store;
+  // }
+  // const store = createMiddlewareTest();
+  // let inputs_, setter_, current_, previous_, state_;
+  // let subscribed = false;
+  const [subscription, setter] = createSubscription({
+    id: "wowowow",
+    defaultValue: 0,
+    onSubscribe: (inputs, setter) => {
+      inputs_ = inputs;
+      setter_ = setter;
+      subscribed = true;
+    },
+    onUnsubscribe: (inputs, setter) => {
+      inputs_ = inputs;
+      setter_ = setter;
+      subscribed = false;
+    },
+    onInputsChanged: (current, previous) => {
+      current_ = current;
+      previous_ = previous;
+    },
+    onSelectorCalled: state => {
+      state_ = state;
+    }
+  });
+  expect(typeof subscription).toEqual("function");
+  expect(typeof setter).toEqual("function");
+  done();
 });
