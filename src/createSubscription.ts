@@ -25,7 +25,11 @@ export function createSubscription<
     id?: string;
   },
   selectors?: []
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -43,7 +47,11 @@ export function createSubscription<
     id?: string;
   },
   selectors: [(state: State) => R1]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -62,7 +70,11 @@ export function createSubscription<
     id?: string;
   },
   selectors: [(state: State) => R1, (state: State) => R2]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -85,7 +97,11 @@ export function createSubscription<
     id?: string;
   },
   selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -114,7 +130,11 @@ export function createSubscription<
     (state: State) => R3,
     (state: State) => R4
   ]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -145,7 +165,11 @@ export function createSubscription<
     (state: State) => R4,
     (state: State) => R5
   ]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -184,7 +208,11 @@ export function createSubscription<
     (state: State) => R5,
     (state: State) => R6
   ]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -225,7 +253,11 @@ export function createSubscription<
     (state: State) => R6,
     (state: State) => R7
   ]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -268,7 +300,11 @@ export function createSubscription<
     (state: State) => R7,
     (state: State) => R8
   ]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -313,7 +349,11 @@ export function createSubscription<
     (state: State) => R8,
     (state: State) => R9
   ]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription<
   R1,
@@ -360,7 +400,11 @@ export function createSubscription<
     (state: State) => R9,
     (state: State) => R10
   ]
-): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+): [
+  (state: State) => DefaultValue,
+  (val: DefaultValue) => void,
+  (state: State) => number | null
+];
 
 export function createSubscription(params: any, selectors: any[] = []) {
   const {
@@ -375,6 +419,7 @@ export function createSubscription(params: any, selectors: any[] = []) {
   let isSubscribed = false;
   let value = defaultValue;
   let prevInputs = null as any;
+  let lastUpdate = null as any;
 
   const selector = createSelector(selectors, (...vals) => {
     onInputsChanged && onInputsChanged(vals, prevInputs);
@@ -383,6 +428,7 @@ export function createSubscription(params: any, selectors: any[] = []) {
 
   const setter = (val: any) => {
     value = val;
+    lastUpdate = Date.now();
     getDispatcher(id)(subscriptionUpdated(value, id));
   };
 
@@ -409,5 +455,5 @@ export function createSubscription(params: any, selectors: any[] = []) {
     states.push(state);
     return value;
   };
-  return [returnSelector, setter] as any;
+  return [returnSelector, setter, () => lastUpdate] as any;
 }

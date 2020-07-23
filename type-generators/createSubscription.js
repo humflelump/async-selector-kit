@@ -18,7 +18,8 @@ export function createSubscription<${ar(n).map(i => `R${i}`).join(', ')}${n > 0 
     id?: string,
     }, selectors${n > 0 ? '' : '?'}: [${ar(n).map(i => `(state: State) => R${i}`).join(', ')}]): [
         (state: State) => DefaultValue,
-        (val: DefaultValue) => void
+        (val: DefaultValue) => void,
+        (state: State) => number | null,
     ];
   `
   }

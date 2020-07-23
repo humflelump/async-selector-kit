@@ -9,7 +9,7 @@ export declare function createSubscription<AsyncReturn, State, Props = undefined
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors?: []): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors?: []): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1], store: Store<State>) => void;
@@ -17,7 +17,7 @@ export declare function createSubscription<R1, AsyncReturn, State, Props = undef
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2], store: Store<State>) => void;
@@ -25,7 +25,7 @@ export declare function createSubscription<R1, R2, AsyncReturn, State, Props = u
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, R3, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2, R3], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2, R3], store: Store<State>) => void;
@@ -33,7 +33,7 @@ export declare function createSubscription<R1, R2, R3, AsyncReturn, State, Props
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, R3, R4, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2, R3, R4], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2, R3, R4], store: Store<State>) => void;
@@ -41,7 +41,7 @@ export declare function createSubscription<R1, R2, R3, R4, AsyncReturn, State, P
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, R3, R4, R5, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2, R3, R4, R5], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2, R3, R4, R5], store: Store<State>) => void;
@@ -49,7 +49,7 @@ export declare function createSubscription<R1, R2, R3, R4, R5, AsyncReturn, Stat
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, R3, R4, R5, R6, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2, R3, R4, R5, R6], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2, R3, R4, R5, R6], store: Store<State>) => void;
@@ -57,7 +57,7 @@ export declare function createSubscription<R1, R2, R3, R4, R5, R6, AsyncReturn, 
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, R3, R4, R5, R6, R7, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2, R3, R4, R5, R6, R7], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2, R3, R4, R5, R6, R7], store: Store<State>) => void;
@@ -65,7 +65,7 @@ export declare function createSubscription<R1, R2, R3, R4, R5, R6, R7, AsyncRetu
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, R3, R4, R5, R6, R7, R8, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2, R3, R4, R5, R6, R7, R8], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2, R3, R4, R5, R6, R7, R8], store: Store<State>) => void;
@@ -73,7 +73,7 @@ export declare function createSubscription<R1, R2, R3, R4, R5, R6, R7, R8, Async
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, R3, R4, R5, R6, R7, R8, R9, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2, R3, R4, R5, R6, R7, R8, R9], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2, R3, R4, R5, R6, R7, R8, R9], store: Store<State>) => void;
@@ -81,7 +81,7 @@ export declare function createSubscription<R1, R2, R3, R4, R5, R6, R7, R8, R9, A
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8, (state: State) => R9]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8, (state: State) => R9]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];
 export declare function createSubscription<R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, AsyncReturn, State, Props = undefined, DefaultValue = undefined>(params: {
     onSubscribe?: (inputs: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10], store: Store<State>) => void;
     onUnsubscribe?: (inputs: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10], store: Store<State>) => void;
@@ -89,4 +89,4 @@ export declare function createSubscription<R1, R2, R3, R4, R5, R6, R7, R8, R9, R
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
-}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8, (state: State) => R9, (state: State) => R10]): [(state: State) => DefaultValue, (val: DefaultValue) => void];
+}, selectors: [(state: State) => R1, (state: State) => R2, (state: State) => R3, (state: State) => R4, (state: State) => R5, (state: State) => R6, (state: State) => R7, (state: State) => R8, (state: State) => R9, (state: State) => R10]): [(state: State) => DefaultValue, (val: DefaultValue) => void, (state: State) => number | null];

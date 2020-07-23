@@ -250,7 +250,7 @@ const data = {};
 
 const getFormat = state => state.format;
 
-const [getTime, setter] = createSubscription(
+const [getTime, setter, getLastUpdate] = createSubscription(
   {
     id: "sub",
     onSubscribe: (inputs, store) => {

@@ -13,6 +13,7 @@ function createSubscription(params, selectors) {
     var isSubscribed = false;
     var value = defaultValue;
     var prevInputs = null;
+    var lastUpdate = null;
     var selector = reselect_1.createSelector(selectors, function () {
         var vals = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -23,6 +24,7 @@ function createSubscription(params, selectors) {
     });
     var setter = function (val) {
         value = val;
+        lastUpdate = Date.now();
         useDispatch_1.getDispatcher(id)(actions_1.subscriptionUpdated(value, id));
     };
     var setSubscriptionState = function (bool) {
@@ -47,6 +49,6 @@ function createSubscription(params, selectors) {
         states.push(state);
         return value;
     };
-    return [returnSelector, setter];
+    return [returnSelector, setter, function () { return lastUpdate; }];
 }
 exports.createSubscription = createSubscription;
