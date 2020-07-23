@@ -4,6 +4,7 @@ exports.PROMISE_RESOLVED = "ASYNC_SELECTOR_PROMISE_RESOLVED";
 exports.PROMISE_REJECTED = "ASYNC_SELECTOR_PROMISE_REJECTED";
 exports.ACTION_STARTED = "ASYNC_SELECTOR_ACTION_STARTED";
 exports.ACTION_FINISHED = "ASYNC_SELECTOR_ACTION_FINISHED";
+exports.SUBSCRIPTION_UPDATED = "ASYNC_SELECTOR_SUBSCRIPTION_UPDATED";
 function promiseResolved(result, took, id) {
     return {
         type: exports.PROMISE_RESOLVED,
@@ -40,3 +41,11 @@ function actionEnded(result, callId, took, id) {
     };
 }
 exports.actionEnded = actionEnded;
+function subscriptionUpdated(value, id) {
+    return {
+        type: exports.SUBSCRIPTION_UPDATED,
+        value: value,
+        id: id
+    };
+}
+exports.subscriptionUpdated = subscriptionUpdated;

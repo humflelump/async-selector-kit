@@ -23,21 +23,20 @@ function createSubscription(params, selectors) {
     });
     var setter = function (val) {
         value = val;
-        useDispatch_1.getDispatcher(id)(actions_1.promiseResolved(value, 0, id));
+        useDispatch_1.getDispatcher(id)(actions_1.subscriptionUpdated(value, id));
     };
     var setSubscriptionState = function (bool) {
         if (bool && !isSubscribed) {
-            onSubscribe && onSubscribe(prevInputs, setter);
+            onSubscribe && onSubscribe(prevInputs, useDispatch_1.getStore());
         }
         else if (!bool && isSubscribed) {
-            onUnsubscribe && onUnsubscribe(prevInputs, setter);
+            onUnsubscribe && onUnsubscribe(prevInputs, useDispatch_1.getStore());
         }
         isSubscribed = bool;
     };
     createMiddleware_1.addNewStateListener(function (state) {
         setSubscriptionState(states.indexOf(state) !== -1);
         var index = states.indexOf(state);
-        console.log({ state: state, index: index });
         for (var i = 0; i < index; i++) {
             states.shift();
         }
