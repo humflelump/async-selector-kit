@@ -1,9 +1,14 @@
 import { addNewStateListener } from "./createMiddleware";
 import { createSelector } from "reselect";
-import { getDispatcher } from "./useDispatch";
-import { promiseResolved } from "./actions";
+import { getDispatcher, getStore } from "./useDispatch";
+import { promiseResolved, subscriptionUpdated } from "./actions";
 
 let createdCount = 0;
+
+export type Store<State> = {
+  getState: () => State;
+  dispatch: (action: any) => void;
+};
 
 export function createSubscription<
   AsyncReturn,
@@ -12,14 +17,14 @@ export function createSubscription<
   DefaultValue = undefined
 >(
   params: {
-    onSubscribe?: (inputs: [], setter: (val: DefaultValue) => void) => void;
-    onUnsubscribe?: (inputs: [], setter: (val: DefaultValue) => void) => void;
+    onSubscribe?: (inputs: [], store: Store<State>) => void;
+    onUnsubscribe?: (inputs: [], store: Store<State>) => void;
     onInputsChanged?: (current: [], previous: [] | null) => void;
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
     id?: string;
   },
-  selectors: []
+  selectors?: []
 ): [(state: State) => DefaultValue, (val: DefaultValue) => void];
 
 export function createSubscription<
@@ -30,8 +35,8 @@ export function createSubscription<
   DefaultValue = undefined
 >(
   params: {
-    onSubscribe?: (inputs: [R1], setter: (val: DefaultValue) => void) => void;
-    onUnsubscribe?: (inputs: [R1], setter: (val: DefaultValue) => void) => void;
+    onSubscribe?: (inputs: [R1], store: Store<State>) => void;
+    onUnsubscribe?: (inputs: [R1], store: Store<State>) => void;
     onInputsChanged?: (current: [R1], previous: [R1] | null) => void;
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
@@ -49,14 +54,8 @@ export function createSubscription<
   DefaultValue = undefined
 >(
   params: {
-    onSubscribe?: (
-      inputs: [R1, R2],
-      setter: (val: DefaultValue) => void
-    ) => void;
-    onUnsubscribe?: (
-      inputs: [R1, R2],
-      setter: (val: DefaultValue) => void
-    ) => void;
+    onSubscribe?: (inputs: [R1, R2], store: Store<State>) => void;
+    onUnsubscribe?: (inputs: [R1, R2], store: Store<State>) => void;
     onInputsChanged?: (current: [R1, R2], previous: [R1, R2] | null) => void;
     onSelectorCalled?: (state: State) => void;
     defaultValue: DefaultValue;
@@ -75,14 +74,8 @@ export function createSubscription<
   DefaultValue = undefined
 >(
   params: {
-    onSubscribe?: (
-      inputs: [R1, R2, R3],
-      setter: (val: DefaultValue) => void
-    ) => void;
-    onUnsubscribe?: (
-      inputs: [R1, R2, R3],
-      setter: (val: DefaultValue) => void
-    ) => void;
+    onSubscribe?: (inputs: [R1, R2, R3], store: Store<State>) => void;
+    onUnsubscribe?: (inputs: [R1, R2, R3], store: Store<State>) => void;
     onInputsChanged?: (
       current: [R1, R2, R3],
       previous: [R1, R2, R3] | null
@@ -105,14 +98,8 @@ export function createSubscription<
   DefaultValue = undefined
 >(
   params: {
-    onSubscribe?: (
-      inputs: [R1, R2, R3, R4],
-      setter: (val: DefaultValue) => void
-    ) => void;
-    onUnsubscribe?: (
-      inputs: [R1, R2, R3, R4],
-      setter: (val: DefaultValue) => void
-    ) => void;
+    onSubscribe?: (inputs: [R1, R2, R3, R4], store: Store<State>) => void;
+    onUnsubscribe?: (inputs: [R1, R2, R3, R4], store: Store<State>) => void;
     onInputsChanged?: (
       current: [R1, R2, R3, R4],
       previous: [R1, R2, R3, R4] | null
@@ -141,14 +128,8 @@ export function createSubscription<
   DefaultValue = undefined
 >(
   params: {
-    onSubscribe?: (
-      inputs: [R1, R2, R3, R4, R5],
-      setter: (val: DefaultValue) => void
-    ) => void;
-    onUnsubscribe?: (
-      inputs: [R1, R2, R3, R4, R5],
-      setter: (val: DefaultValue) => void
-    ) => void;
+    onSubscribe?: (inputs: [R1, R2, R3, R4, R5], store: Store<State>) => void;
+    onUnsubscribe?: (inputs: [R1, R2, R3, R4, R5], store: Store<State>) => void;
     onInputsChanged?: (
       current: [R1, R2, R3, R4, R5],
       previous: [R1, R2, R3, R4, R5] | null
@@ -181,11 +162,11 @@ export function createSubscription<
   params: {
     onSubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onUnsubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onInputsChanged?: (
       current: [R1, R2, R3, R4, R5, R6],
@@ -221,11 +202,11 @@ export function createSubscription<
   params: {
     onSubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6, R7],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onUnsubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6, R7],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onInputsChanged?: (
       current: [R1, R2, R3, R4, R5, R6, R7],
@@ -263,11 +244,11 @@ export function createSubscription<
   params: {
     onSubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6, R7, R8],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onUnsubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6, R7, R8],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onInputsChanged?: (
       current: [R1, R2, R3, R4, R5, R6, R7, R8],
@@ -307,11 +288,11 @@ export function createSubscription<
   params: {
     onSubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6, R7, R8, R9],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onUnsubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6, R7, R8, R9],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onInputsChanged?: (
       current: [R1, R2, R3, R4, R5, R6, R7, R8, R9],
@@ -353,11 +334,11 @@ export function createSubscription<
   params: {
     onSubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onUnsubscribe?: (
       inputs: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10],
-      setter: (val: DefaultValue) => void
+      store: Store<State>
     ) => void;
     onInputsChanged?: (
       current: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10],
@@ -402,14 +383,14 @@ export function createSubscription(params: any, selectors: any[] = []) {
 
   const setter = (val: any) => {
     value = val;
-    getDispatcher(id)(promiseResolved(value, 0, id));
+    getDispatcher(id)(subscriptionUpdated(value, id));
   };
 
   const setSubscriptionState = bool => {
     if (bool && !isSubscribed) {
-      onSubscribe && onSubscribe(prevInputs, setter);
+      onSubscribe && onSubscribe(prevInputs, getStore());
     } else if (!bool && isSubscribed) {
-      onUnsubscribe && onUnsubscribe(prevInputs, setter);
+      onUnsubscribe && onUnsubscribe(prevInputs, getStore());
     }
     isSubscribed = bool;
   };
@@ -417,7 +398,6 @@ export function createSubscription(params: any, selectors: any[] = []) {
   addNewStateListener(state => {
     setSubscriptionState(states.indexOf(state) !== -1);
     const index = states.indexOf(state);
-    console.log({ state, index });
     for (let i = 0; i < index; i++) {
       states.shift();
     }

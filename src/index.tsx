@@ -17,6 +17,7 @@ import { createAsyncSelector } from "async-selector";
 import { createMiddleware } from "./createMiddleware";
 import { createSubscription } from "./createSubscription";
 import { createAsyncAction } from "./createAsyncAction";
+import { SUBSCRIPTION_UPDATED } from "./actions";
 import {
   ACTION_STARTED,
   ACTION_FINISHED,
@@ -35,6 +36,7 @@ export {
   PROMISE_REJECTED,
   ACTION_STARTED,
   ACTION_FINISHED,
+  SUBSCRIPTION_UPDATED,
   actionEnded,
   actionStarted,
   createAsyncSelectorResults,

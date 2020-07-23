@@ -245,7 +245,6 @@ You can actually put data streams (like web sockets) in your dependency graph al
 
 ```js
 import { createSubscription } from "async-selector-kit";
-import { store } from "./store";
 
 const data = {};
 
@@ -254,7 +253,7 @@ const getFormat = state => state.format;
 const [getTime, setter] = createSubscription(
   {
     id: "sub",
-    onSubscribe: (inputs, setter) => {
+    onSubscribe: (inputs, store) => {
       data.interval = setInterval(() => {
         const format = getFormat(store.getState());
         if (format === "unix") {
@@ -264,7 +263,7 @@ const [getTime, setter] = createSubscription(
         }
       });
     },
-    onUnsubscribe: (inputs, setter) => {
+    onUnsubscribe: (inputs, store) => {
       clearInterval(data.interval);
     },
     onInputsChanged: (current, previous) => {},

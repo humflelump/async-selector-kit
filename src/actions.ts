@@ -2,6 +2,7 @@ export const PROMISE_RESOLVED = "ASYNC_SELECTOR_PROMISE_RESOLVED";
 export const PROMISE_REJECTED = "ASYNC_SELECTOR_PROMISE_REJECTED";
 export const ACTION_STARTED = "ASYNC_SELECTOR_ACTION_STARTED";
 export const ACTION_FINISHED = "ASYNC_SELECTOR_ACTION_FINISHED";
+export const SUBSCRIPTION_UPDATED = "ASYNC_SELECTOR_SUBSCRIPTION_UPDATED";
 
 export function promiseResolved(
   result: any,
@@ -49,5 +50,13 @@ export function actionEnded(
     result,
     took,
     callId
+  };
+}
+
+export function subscriptionUpdated(value: any, id: string | undefined) {
+  return {
+    type: SUBSCRIPTION_UPDATED,
+    value,
+    id
   };
 }
