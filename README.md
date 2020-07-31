@@ -45,7 +45,7 @@ export const store = createStore(rootReducer, applyMiddleware(...middlewares));
 With that set up, you can start creating async selectors. Here is basic example:
 
 ```js
-import { createAsyncSelectorResults } from "async-selector-kits";
+import { createAsyncSelectorResults } from "async-selector-kit";
 
 // Your real request code goes here. This is just for example.
 const getEmployees = searchText => {
