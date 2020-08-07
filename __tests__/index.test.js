@@ -667,6 +667,31 @@ test("createAsyncAction", done => {
   }, 25);
 });
 
+test("createAsyncAction should catch error", (done) => {
+  const errorThrowingFunc = async () => {
+    await new Promise((res) => setTimeout(res, 50));
+    throw new Error("Expect this to be caught");
+  };
+
+  const [command, loading, error] = createAsyncAction({
+    id: "my-action",
+    async: (_store, _status) => async () => {
+      await errorThrowingFunc();
+    },
+  });
+  command();
+  expect(error()).toBeFalsy();
+  setTimeout(() => {
+    try {
+      expect(error()).toBeTruthy();
+      expect(loading()).toBeFalsy();
+      done();
+    } catch (e) {
+      done.fail(e);
+    }
+  }, 75);
+});
+
 test("createAsyncAction debounced", done => {
   const state = {
     name: "mark"
