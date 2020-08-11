@@ -8,6 +8,7 @@ import { createSubscription } from "async-selector-kit";
 import { createAsyncAction } from "async-selector-kit";
 import { Store, ActionState } from "../../src/createAsyncAction";
 import { debounce } from "lodash";
+import { Action } from "redux";
 
 const text = (state: State) => state.blah.text as string;
 
@@ -51,14 +52,18 @@ const [newSelector] = createSubscription(
 const [action, loadingAction, error] = createAsyncAction(
   {
     id: "wowowowow",
-    async: (store, status) => async (val: string, wow: number) => {
+    async: (store, status, val) => async action => {
       status.onCancel = () => console.log("cancelled");
-      console.log("started", val, wow);
+      //console.log("started", val, wow);
+      console.log("called", action);
       await new Promise(res => setTimeout(res, 1000));
-      console.log("ended", val, wow);
+      //console.log("ended", val, wow);
       return true;
     },
-    throttle: f => debounce(f, 2000)
+    subscription: (action, store) => {
+      console.log({ action, store });
+      return true;
+    }
   },
   [(state: State) => state.async]
 );
@@ -82,7 +87,7 @@ const App: React.FC = () => {
         value={text}
         onChange={e => {
           dispatch({ type: "settext", text: e.target.value });
-          action("555", 666);
+          //action("555", 666);
         }}
       />
       <div>{long}</div>

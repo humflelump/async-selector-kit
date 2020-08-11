@@ -9,6 +9,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var useDispatch_1 = require("./useDispatch");
 var actions_1 = require("./actions");
+var createMiddleware_1 = require("./createMiddleware");
 var c = 0;
 function throttlePromise(func, throttle) {
     var f = function (res, rej, func, params) {
@@ -42,6 +43,10 @@ function createAsyncAction(params, selectors) {
     var inputs = selectors || [];
     var id = params.id || "ASYNC_ACTION" + ++c;
     var throttle = params.throttle || (function (f) { return f; });
+    var subscription = params.subscription;
+    var spawnActions = typeof params.dispatchActions === "boolean"
+        ? false
+        : params.dispatchActions;
     var transform = function (func) { return function () {
         var params1 = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -65,13 +70,17 @@ function createAsyncAction(params, selectors) {
                 actionState.id = actionCallId;
                 var t = Date.now();
                 mostRecentAction = actionCallId;
-                useDispatch_1.getDispatcher(id)(actions_1.actionStarted(params2, actionCallId, id));
+                if (spawnActions) {
+                    useDispatch_1.getDispatcher(id)(actions_1.actionStarted(params2, actionCallId, id));
+                }
                 var finish = function (error_, result_) {
                     var took = Date.now() - t;
                     if (actionCallId === mostRecentAction) {
                         loading = false;
                         error = error_;
-                        useDispatch_1.getDispatcher(id)(actions_1.actionEnded(result_, actionCallId, took, id));
+                        if (spawnActions) {
+                            useDispatch_1.getDispatcher(id)(actions_1.actionEnded(result_, actionCallId, took, id));
+                        }
                     }
                     delete actionStates[actionCallId];
                 };
@@ -105,6 +114,10 @@ function createAsyncAction(params, selectors) {
         promise.then(function (_) { return _; }).catch(function (_) { return _; });
         return actionState;
     };
+    subscription &&
+        createMiddleware_1.addNewActionListener(function (actionObj, store) {
+            subscription(action, store) && action(actionObj);
+        });
     return [action, function () { return loading; }, function () { return error; }];
 }
 exports.createAsyncAction = createAsyncAction;

@@ -7,31 +7,35 @@ var ar = n => {
 };
 
 // prettier-ignore
-function makeType (n, s) {
-      return `
-    export function createAsyncAction<
-      State, PromiseReturn${n > 0 ? ', ' : ''}
-      ${ar(n).map(i => `R${i}`).join(', ')}${s > 0 ? ', ' : ''}
-      ${ar(s).map(i => `S${i}`).join(', ')}
-    >(
-      params: {
-        async: (store: Store<State>, status: ActionState<PromiseReturn>${s > 0 ? ', ' : ''}${ar(s).map(i => `s${i}: S${i}`).join(', ')}) => (${ar(n).map(i => `val${i}: R${i}`).join(', ')}${n > 0 ? ', ' : ''}) => Promise<PromiseReturn>
-        id?: string;
-        throttle?: (f: () => any) => (() => any);
-      },
-      selectors${s > 0 ? '' : '?'}:[${ar(s).map(i => `(state: State) => S${i}`).join(', ')}] 
-    ): [
-      (${ar(n).map(i => `val${i}: R${i}`).join(', ')}) => ActionState<PromiseReturn>,
-      () => boolean,
-      () => any | undefined,
-    ];
-    `
+function makeType (n, s, subscription = false) {
+      return `export function createAsyncAction<
+  State, PromiseReturn${n > 0 ? ', ' : ''}
+  ${ar(n).map(i => `R${i}`).join(', ')}${s > 0 ? ', ' : ''}
+  ${ar(s).map(i => `S${i}`).join(', ')}
+>(
+  params: {
+    async: (store: Store<State>, status: ActionState<PromiseReturn>${s > 0 ? ', ' : ''}${ar(s).map(i => `s${i}: S${i}`).join(', ')}) => (${!subscription ? ar(n).map(i => `val${i}: R${i}`).join(', ') : 'action: ReduxAction'}${n > 0 ? ', ' : ''}) => Promise<PromiseReturn>
+    id?: string;
+    throttle?: (f: () => any) => (() => any);
+    dispatchActions?: boolean;
+    ${!subscription ? 'subscription?: undefined' : 'subscription: (action: ReduxAction, store) => boolean;'}
+  },
+  selectors${s > 0 ? '' : '?'}:[${ar(s).map(i => `(state: State) => S${i}`).join(', ')}] 
+): [
+  (${!subscription ? ar(n).map(i => `val${i}: R${i}`).join(', ') : 'action: ReduxAction'}) => ActionState<PromiseReturn>,
+  () => boolean,
+  () => any | undefined,
+];
+`
     }
 
 var L = [];
-for (let i = 0; i < 6; i++) {
-  for (let j = 0; j < 6; j++) {
+for (let i = 0; i < 5; i++) {
+  for (let j = 0; j < 5; j++) {
     L.push(makeType(i, j));
   }
 }
-L.join("");
+for (let j = 0; j < 5; j++) {
+  L.push(makeType(0, j, true));
+}
+console.log(L.join(""));
