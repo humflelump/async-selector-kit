@@ -216,6 +216,7 @@ You can rig your actions to be triggered in response to actions dispatched by pa
 ```js
 import { createAsyncAction } from "async-selector-kit";
 import { sendMessage } from "./api";
+import { store } from "./store";
 
 const getMessage = state => state.message;
 
@@ -232,6 +233,8 @@ createAsyncAction(
   },
   [getMessage]
 );
+
+store.dispatch({ type: "MESSAGE" });
 ```
 
 ### selectors: Selector[] = []
