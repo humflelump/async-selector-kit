@@ -656,9 +656,7 @@ export function createAsyncAction(params: any, selectors?: any[]) {
   const throttle = params.throttle || (f => f);
   const { subscription } = params;
   const spawnActions =
-    typeof params.dispatchActions === "boolean"
-      ? false
-      : params.dispatchActions;
+    typeof params.dispatchActions === "boolean" ? params.dispatchActions : true;
 
   const transform = func => (...params1) => (actionState, ...params2) => {
     const oldPromise = func(...params1)(...params2);
@@ -725,7 +723,7 @@ export function createAsyncAction(params: any, selectors?: any[]) {
 
   subscription &&
     addNewActionListener((actionObj, store) => {
-      subscription(action, store) && action(actionObj);
+      subscription(actionObj, store) && action(actionObj);
     });
 
   return [action, () => loading, () => error];

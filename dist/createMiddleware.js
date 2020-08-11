@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var useDispatch_1 = require("./useDispatch");
-var stateListeners = [];
+var listeners = [];
 var actionListeners = [];
 function addNewStateListener(listener) {
-    stateListeners.push(listener);
+    listeners.push(listener);
 }
 exports.addNewStateListener = addNewStateListener;
 function addNewActionListener(listener) {
@@ -18,7 +18,7 @@ function createMiddleware() {
         var nextState = store.getState();
         actionListeners.forEach(function (f) { return f(action, store); });
         setTimeout(function () {
-            stateListeners.forEach(function (f) { return f(nextState); });
+            listeners.forEach(function (f) { return f(nextState); });
         });
         return result;
     }; }; };

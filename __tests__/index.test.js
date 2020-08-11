@@ -667,9 +667,9 @@ test("createAsyncAction", done => {
   }, 25);
 });
 
-test("createAsyncAction should catch error", (done) => {
+test("createAsyncAction should catch error", done => {
   const errorThrowingFunc = async () => {
-    await new Promise((res) => setTimeout(res, 50));
+    await new Promise(res => setTimeout(res, 50));
     throw new Error("Expect this to be caught");
   };
 
@@ -677,7 +677,7 @@ test("createAsyncAction should catch error", (done) => {
     id: "my-action",
     async: (_store, _status) => async () => {
       await errorThrowingFunc();
-    },
+    }
   });
   command();
   expect(error()).toBeFalsy();
@@ -690,6 +690,49 @@ test("createAsyncAction should catch error", (done) => {
       done.fail(e);
     }
   }, 75);
+});
+
+test("createAsyncAction should work as middleware", done => {
+  const actions = [];
+  function createMiddlewareTest() {
+    const middleware = createMiddleware();
+    const store = {
+      getState: () => true,
+      dispatch: action => null
+    };
+    return action => middleware(store)(store.dispatch)(action);
+  }
+  const dispatch = createMiddlewareTest();
+  const [command, loading, error] = createAsyncAction({
+    id: "my-action",
+    async: (_store, _status) => async action => {
+      actions.push(action);
+      return true;
+    },
+    subscription: (action, store) => {
+      return action.type === "wow";
+    }
+  });
+  const action1 = { type: "wow" };
+  const action2 = { type: "omg" };
+  const action3 = { type: "wow" };
+  dispatch(action1);
+  setTimeout(() => {
+    dispatch(action2);
+    setTimeout(() => {
+      dispatch(action3);
+      setTimeout(() => {
+        try {
+          expect(actions.length).toEqual(2);
+          expect(actions[0]).toEqual(action1);
+          expect(actions[1]).toEqual(action3);
+          done();
+        } catch (e) {
+          done.fail(e);
+        }
+      }, 10);
+    }, 10);
+  }, 10);
 });
 
 test("createAsyncAction debounced", done => {

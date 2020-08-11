@@ -209,6 +209,31 @@ console.log(status); // { cancelled: false, onCancel: Function, promise: Promise
 console.log(loadingSelector()); // false
 ```
 
+You can rig your actions to be triggered in response to actions dispatched by passing a "subscription" callback function. You can also pass in `"dispatchActions": false` to stop actions from being spawned by the library. Be warned, the loading selector may not be called as soon as loading starts and stops
+
+### Example 3
+
+```js
+import { createAsyncAction } from "async-selector-kit";
+import { sendMessage } from "./api";
+
+const getMessage = state => state.message;
+
+createAsyncAction(
+  {
+    id: "sendMessage",
+    async: (store, status, message) => async action => {
+      console.log(action);
+      const newMessage = upperCase ? message.toUpperCase() : message;
+      await sendMessage(newMessage);
+    },
+    subscription: (action, store) => action.type === "MESSAGE",
+    dispatchActions: false
+  },
+  [getMessage]
+);
+```
+
 ### selectors: Selector[] = []
 
 list of selectors whose results are injected into the provided function.
@@ -220,6 +245,14 @@ an id that is passed into actions created by the library
 ### params.throttle?: (f: Function) => Function
 
 an optional function that can prevent too many requests being made
+
+### params.dispatchActions?: boolean = true
+
+boolean for whether or not the library automtically generates actions when the function is called.
+
+### params.subscription?: (action, store) => boolean
+
+if passed a subscription, any actions that satify the condition will be passed as the first parameter to params.async's passedParams
 
 ### params.async: (store: ReduxStore, status: Status, ...selectorResults) => (...passedParams) => Promise
 

@@ -1,10 +1,10 @@
 import { useStore } from "./useDispatch";
 
-const stateListeners = [] as any[];
+const listeners = [] as any[];
 const actionListeners = [] as any[];
 
 export function addNewStateListener(listener) {
-  stateListeners.push(listener);
+  listeners.push(listener);
 }
 
 export function addNewActionListener(listener) {
@@ -18,7 +18,7 @@ export function createMiddleware() {
     const nextState = store.getState();
     actionListeners.forEach(f => f(action, store));
     setTimeout(() => {
-      stateListeners.forEach(f => f(nextState));
+      listeners.forEach(f => f(nextState));
     });
     return result;
   };

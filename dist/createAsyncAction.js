@@ -44,9 +44,7 @@ function createAsyncAction(params, selectors) {
     var id = params.id || "ASYNC_ACTION" + ++c;
     var throttle = params.throttle || (function (f) { return f; });
     var subscription = params.subscription;
-    var spawnActions = typeof params.dispatchActions === "boolean"
-        ? false
-        : params.dispatchActions;
+    var spawnActions = typeof params.dispatchActions === "boolean" ? params.dispatchActions : true;
     var transform = function (func) { return function () {
         var params1 = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -116,7 +114,7 @@ function createAsyncAction(params, selectors) {
     };
     subscription &&
         createMiddleware_1.addNewActionListener(function (actionObj, store) {
-            subscription(action, store) && action(actionObj);
+            subscription(actionObj, store) && action(actionObj);
         });
     return [action, function () { return loading; }, function () { return error; }];
 }
