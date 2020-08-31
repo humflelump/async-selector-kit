@@ -30,12 +30,12 @@ function makeType (n, s, subscription = false) {
     }
 
 var L = [];
-for (let i = 0; i < 5; i++) {
-  for (let j = 0; j < 5; j++) {
+for (let i = 0; i < 9; i++) {
+  for (let j = 0; j < 9; j++) {
     L.push(makeType(i, j));
   }
 }
-for (let j = 0; j < 5; j++) {
+for (let j = 0; j < 9; j++) {
   L.push(makeType(0, j, true));
 }
 console.log(L.join(""));
