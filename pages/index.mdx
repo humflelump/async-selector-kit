@@ -1,0 +1,71 @@
+import {
+  ScreenContainer,
+  Button,
+  HeroSection,
+  Hero,
+  HeroBody,
+  HeroTitle,
+  HeroTeaser,
+  HeroActionList,
+  HeroAction,
+} from "smooth-doc/components";
+import {
+  FeatureSection,
+  FeatureList,
+  Feature,
+  FeatureImage,
+  FeatureTitle,
+  FeatureText,
+} from "smooth-doc/components";
+import heroBackgroundImageURL from "../images/hero-background.png";
+
+<>
+<HeroSection>
+  <Hero backgroundImageURL={heroBackgroundImageURL}>
+    <HeroBody>
+      <HeroTitle>async-selector-kit</HeroTitle>
+      <HeroTeaser>
+        Redux async selectors focused on dev happiness and performance.
+      </HeroTeaser>
+      <HeroActionList>
+        <HeroAction>
+          <Button variant="neutral" forwardedAs="a" href="/docs/">
+            Browse Docs
+          </Button>
+        </HeroAction>
+      </HeroActionList>
+    </HeroBody>
+  </Hero>
+</HeroSection>
+
+
+ <FeatureSection>
+    <FeatureList>
+      <Feature>
+        <FeatureTitle>Selectors</FeatureTitle>
+        <FeatureText>
+          Async selectors use reselect to reduce re-renders as well as fetch data when the dependency changes. Throttle and cache them too!
+        </FeatureText>
+      </Feature>
+      <Feature>
+        <FeatureTitle>Actions</FeatureTitle>
+        <FeatureText>
+          Fire off actions / commands for your async-effects like submitting data or long running tasks. 
+        </FeatureText>
+      </Feature>
+      <Feature>
+        <FeatureTitle>Flexibility</FeatureTitle>
+        <FeatureText>
+          Store your data in Redux or keep them in selectors, whichever is easiest for you.
+        </FeatureText>
+      </Feature>
+      <Feature>
+        <FeatureTitle>Developer Happiness</FeatureTitle>
+        <FeatureText>
+          No ceremony or complex setup; define your async API call, wrap in a selector, and you get instant loading / error / data.
+        </FeatureText>
+      </Feature>
+    </FeatureList>
+  </FeatureSection>
+  </>
+

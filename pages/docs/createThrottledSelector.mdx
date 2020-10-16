@@ -1,0 +1,65 @@
+---
+title: Subscriptions
+order: 4
+---
+
+## createSubscription(id?, onSubscribe, onUnsubscribe, onInputsChanged, onSelectorCalled): [selector, setter]
+
+You can actually put data streams (like web sockets) in your dependency graph along side selectors and async selectors. It works by monitor calls to it and if an action was dispatched, but the selector wasn't called, that means no component is subscribed. Then you can destroy the data stream until another component subscribes.
+
+```js
+import { createSubscription } from "async-selector-kit";
+
+const data = {};
+
+const getFormat = (state) => state.format;
+
+const [getTime, setter, getLastUpdate] = createSubscription(
+  {
+    id: "sub",
+    onSubscribe: (inputs, store) => {
+      data.interval = setInterval(() => {
+        const format = getFormat(store.getState());
+        if (format === "unix") {
+          setter(Date.now() / 1000);
+        } else {
+          setter(Date.now());
+        }
+      });
+    },
+    onUnsubscribe: (inputs, store) => {
+      clearInterval(data.interval);
+    },
+    onInputsChanged: (current, previous) => {},
+    onSelectorCalled: (state) => {},
+  },
+  [getFormat]
+);
+```
+
+## createThrottledSelector(selectors, func, throttler, id?): selector
+
+A powerful technique async selectors allow you to use is delaying expensive calculations so they don't negative effect user experience. This function is very similar to reselect's createSelector except you pass in an additional throttle function. When the expensive function is ready to be computed, a re-render action will be dispatched. If the function is very expensive, you may want to consider using an async function that calls a web worker instead so it is non-blocking.
+
+### Example
+
+```js
+import { createThrottledSelector } from "async-selector-kit";
+import _ from "underscore";
+
+function expensiveFunction(text) {
+  for (let i = 0; i < 10000; i++) {
+    text += text;
+  }
+  return text;
+}
+
+// The calculation will only be triggered if searchText hasn't changed for 500ms (the first calculation will be done no matter what)
+// the selector will return the last computed value
+export const text10000 = createThrottledSelector(
+  [(state) => state.searchText],
+  expensiveFunction,
+  (f) => _.debounce(f, 500),
+  "myThrottledSelector"
+);
+```

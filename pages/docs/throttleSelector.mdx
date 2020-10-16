@@ -1,0 +1,35 @@
+---
+title: Throttling
+order: 5
+---
+
+## throttleSelector(selector, throttler, id?): selector
+
+This function is slightly different from createThrottledSelector and is useful for when you need both the original selector and a throttled version of it. For example you might want to do an expensive calculation after the user is done typing but you don't want to make the textfield rendering debounced.
+
+### Example
+
+```js
+import { throttleSelector } from "async-selector-kit";
+import _ from "underscore";
+import { createSelector } from "reselect";
+
+function expensiveFunction(text) {
+  for (let i = 0; i < 10000; i++) {
+    text += text;
+  }
+  return text;
+}
+
+// This selector can be used by the textfield component
+const getText = (state) => state.searchText;
+
+const throttledText = throttleSelector(
+  getText,
+  (f) => _.debounce(f, 250),
+  "getText"
+);
+
+// This selector will only re-compute if the user hasn't typed for 250ms.
+const text10000 = createSelector([throttledText], expensiveFunction);
+```

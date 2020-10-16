@@ -1,0 +1,104 @@
+---
+title: Documentation
+---
+
+This library is built on top of [async-selector](https://github.com/humflelump/async-selector). The goal of this library is:
+
+1. **Provide a set of functions to simplify development using async-selector**
+2. **Ensure these functions are well tested and have full typescript support**
+
+# Installation
+
+```
+yarn add async-selector-kit
+```
+
+# Glossary
+
+- [createAsyncSelectorResults()](https://github.com/humflelump/async-selector-kit/wiki#createasyncselectorresultsparams-selectors-value-waiting-error-forceupdate)
+- [createAsyncAction()](https://github.com/humflelump/async-selector-kit/wiki#createasyncaction-selectors-func-throttler-id-action-loadingselector-errorselector)
+- [createSubscription()](https://github.com/humflelump/async-selector-kit/wiki#createsubscriptionid-onsubscribe-onunsubscribe-oninputschanged-onselectorcalled-selector-setter)
+- [createThrottledSelector()](https://github.com/humflelump/async-selector-kit/wiki#createthrottledselectorselectors-func-throttler-id-selector)
+- [throttleSelector()](https://github.com/humflelump/async-selector-kit/wiki#throttleselectorselector-throttler-id-selector)
+- [createAsyncSelectorWithCache()](https://github.com/humflelump/async-selector-kit/wiki#createasyncselectorwithcacheparams-selectors-value-waiting-error-forceupdate)
+- [useDispatch()](https://github.com/humflelump/async-selector-kit/wiki#usedispatchdispatcher-function-id-string-void)
+- [createReducer()](https://github.com/humflelump/async-selector-kit/wiki#createreducer-state---action--state)
+- [Miscellaneous](https://github.com/humflelump/async-selector-kit/wiki#miscellaneous)
+
+# Getting Started
+
+Before creating new async selectors, you must do two things. You must provide a reference to a dispatch function so re-render actions can be generated. You must have your reducer handle these actions.
+
+```js
+import { combineReducers, createStore, applyMiddleware } from "redux";
+import { createMiddleware, createReducer } from "async-selector-kit";
+
+const rootReducer = combineReducers({
+  // Your other sub-reducers go here ...
+  AsyncSelector: createReducer(),
+});
+
+const middlewares = [
+  // your other middleware goes here ...
+  createMiddleware(),
+];
+
+export const store = createStore(rootReducer, applyMiddleware(...middlewares));
+```
+
+With that set up, you can start creating async selectors. Here is basic example:
+
+```js
+import { createAsyncSelectorResults } from "async-selector-kit";
+
+// Your real request code goes here. This is just for example.
+const getEmployees = (searchText) => {
+  return new Promise((resolve) => {
+    const database = ["Mark Metzger", "Steve Miller"];
+    setTimeout(() => {
+      resolve(database.filter((name) => searchText.includes(name)));
+    }, 1000);
+  });
+};
+
+const [employees, isLoading, error] = createAsyncSelectorResults(
+  {
+    async: getEmployees,
+    id: "myFirstAsyncSelector",
+    defaultValue: [],
+  },
+  [(state) => state.searchText]
+);
+
+// employees(state) returns the last value returned from the async function or the defaultValue if it has not yet successfully returned a value
+// isLoading(state) return a boolean for if the async function is pending
+// error(state) returns the error created by async function or null if there was no error
+```
+
+# API
+
+## Miscellaneous
+
+### createThrottledSelectorResults(selectors, func, throttleFunc, id?): [getValue, waiting]
+
+Exact same as createThrottledSelector() except it returns a tuple containing both the value and the waiting state
+
+### throttleSelectorResults(selector, throttleFunc, id?): [getValue, waiting]
+
+Exact same as throttleSelector() except it returns a tuple containing both the value and the waiting state
+
+### promiseResolved(result: any, took: number, id? string): ActionObject
+
+Generates an action object representing a promise resolution
+
+### promiseRejected(error: any, id?: string: ActionObject
+
+Generates an action object representing a promise rejection
+
+### createSelector(...selectors, func): Selector
+
+A re-export from the reselect library
+
+### createAsyncSelector(params, ...selectors): Selector
+
+A re-export from the async-selector library

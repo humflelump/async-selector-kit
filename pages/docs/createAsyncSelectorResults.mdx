@@ -1,0 +1,80 @@
+---
+title: Selector Results
+order: 2
+---
+
+## createAsyncSelectorResults(params, selectors): [value, waiting, error, forceUpdate]
+
+This is the main function exposed by the library, and it provides the basic functionality for creating async selectors. The basic idea is that you pass in a list of selectors and an async function (instead of a normal function as in reselect). It outputs three selectors to access the result of the function. Whenever, the promise resolves or rejects, an action is dispatched behind the scenes which triggers the application to render the new data.
+
+### Example
+
+```js
+const [employees, isLoading, error, forceUpdate] = createAsyncSelectorResults(
+  {
+    async: getEmployees,
+    id: "myFirstAsyncSelector",
+    defaultValue: [],
+    onResolve: (employees) => console.log(employees),
+    onReject: (error) => console.log(error),
+    onCancel: (cancelledPromise) => console.log(cancelledPromise),
+    throttle: (f) => _.debounce(f, 250),
+    shouldUseAsync: (text) => text !== "",
+  },
+  [(state) => state.searchText]
+);
+```
+
+### selectors: Selector[] = []
+
+The second parameter is an array of selectors to be used to generate the value passed into the async function.
+
+### params.async: (...values) => Promise
+
+The async function used to generate the returned selectors. The return values of the selectors are passed into the function and it will be all any time any of the values changes.
+
+### id?: string
+
+An identifier which will be passed into the generated actions and is useful for debugging. The id must be unique.
+
+### defaultValue: any = []
+
+If the promise has not yet resolved, this value will be returned instead.
+
+### onResolve?: (result: AsyncReturn) => void
+
+A callback for when the promise resolved. This is called after the action was dispatched.
+
+### onReject?: (error: Error) => void
+
+A callback for when the promise rejects. This is called after the action was dispatched.
+
+### onCancel?: (promise: Promise) => void
+
+A callback for when a promise is cancelled because a new promise was generated before the first one finished.
+
+### throttle?: (f: Function) => Function
+
+This provides a method for limiting how often the async function is called. For example, you might want to debounce queries so the server only gets a request after the user stops typing. Commonly, this will be achieved using lodash's debounce and throttle functions.
+
+### shouldUseAsync?: (...values) => boolean
+
+This provides a method to stop calling the async function if some condition is not met. If this returns false, the async selector will be in the waiting state. The return values of the selectors are passed into this function.
+
+### Return Values:
+
+### value: (state: State) => Result | DefaultValue
+
+A selector used to access the return value of the async function. If there was no return value yet, it will return the defaultValue (or empty list if that was not defined).
+
+### waiting: (state: State) => boolean
+
+A selector used to access if the promise is in the pending state
+
+### error: (state: State) => Error | null
+
+A Selector used to access the error the promise returned. It returns null if the promise did not reject.
+
+### forceUpdate: (state: State) => void
+
+This will force the async function to be called even if the state was not changed. This is useful if you know the data in the database has changed.

@@ -1,0 +1,43 @@
+---
+title: Caching
+order: 6
+---
+
+## createAsyncSelectorWithCache(params, selectors): [value, waiting, error, forceUpdate]
+
+Sometimes you will want to implement a client-side cache to prevent unnecessary requests. This is perfectly doable with async selectors but there is minor flaw. A re-render action will always be dispatched, even if the data is already cached and can be obtained synchronously. This function solves that problem. The function is the exact same as createAsyncSelectorResults() except it takes in an addition getCache() argument. If getCache() returns a truthy value, the async function will never get called, and the cache is returned instead.
+
+### Example
+
+```js
+class CachedApi {
+  constructor() {
+    this.db = {
+      mark: "metzger",
+      project: "euler",
+    };
+    this.cache = {};
+  }
+
+  getCache(name) {
+    return this.cache[name];
+  }
+
+  async getName(name) {
+    await new Promise((res) => setTimeout(res, 50));
+    const result = this.db[name];
+    this.cache[name] = result;
+    return result;
+  }
+}
+const api = new CachedApi();
+
+const [getValue, waiting, error] = createAsyncSelectorWithCache(
+  {
+    async: (name, cachedResult) => api.getName(name),
+    getCache: (name) => api.getCache(name),
+    defaultValue: null,
+  },
+  [(state) => state.name]
+);
+```

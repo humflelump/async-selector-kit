@@ -1,0 +1,130 @@
+---
+title: Actions
+order: 3
+---
+
+## createAsyncAction: (selectors, func, throttler, id?: [action, loadingSelector, errorSelector]
+
+A very common problem in app development is doing async operations with side-effects like saving some data to a database. This library provides provides a convenient, boilerplate-free way of doing this. You can cancel and throttle the action easily, and you are provided with selectors exposing the error and loading states of the promise. And since it isn't reliant on middleware, it code-splits effectively unlike other common approaches.
+
+### Example 1
+
+```js
+import { createAsyncAction } from "async-selector-kit";
+import { sendMessage } from "./api";
+
+const getMessage = (state) => state.message;
+
+const [action, loadingSelector, errorSelector] = createAsyncAction({
+  id: "sendMessage",
+  async: (store, status) => async () => {
+    status.onCancel = () => sendMessage.abort();
+    const message = getMessage(store.getState());
+    await sendMessage(message);
+  },
+});
+console.log(loadingSelector()); // false
+console.log(errorSelector()); // undefined
+const status = action();
+console.log(status); // { id: 1, cancelled: false, onCancel: Function, promise: Promise }
+console.log(loadingSelector()); // true
+action();
+console.log(status); // { id: 1, cancelled: true, onCancel: Function, promise: Promise }
+console.log(loadingSelector()); // true
+```
+
+You can also pass parameters to the action and inject the results of selectors.
+
+### Example 2
+
+```js
+import { createAsyncAction } from "async-selector-kit";
+import { sendMessage } from "./api";
+
+const getMessage = (state) => state.message;
+
+const [action, loadingSelector, errorSelector] = createAsyncAction(
+  {
+    id: "sendMessage",
+    async: (store, status, message) => async (upperCase) => {
+      const newMessage = upperCase ? message.toUpperCase() : message;
+      await sendMessage(newMessage);
+    },
+    throttle: (f) => debounce(f, 500),
+  },
+  [getMessage]
+);
+console.log(loadingSelector()); // false
+console.log(errorSelector()); // undefined
+const status = action(true);
+action(true);
+// The promise hasn't been started because the debounce
+console.log(status); // { cancelled: false, onCancel: Function, promise: Promise }
+console.log(loadingSelector()); // false
+```
+
+You can rig your actions to be triggered in response to actions dispatched by passing a "subscription" callback function. You can also pass in `"dispatchActions": false` to stop actions from being spawned by the library. Be warned, the loading selector may not be called as soon as loading starts and stops
+
+### Example 3
+
+```js
+import { createAsyncAction } from "async-selector-kit";
+import { sendMessage } from "./api";
+import { store } from "./store";
+
+const getMessage = (state) => state.message;
+
+createAsyncAction(
+  {
+    id: "sendMessage",
+    async: (store, status, message) => async (action) => {
+      console.log(action);
+      const newMessage = upperCase ? message.toUpperCase() : message;
+      await sendMessage(newMessage);
+    },
+    subscription: (action, store) => action.type === "MESSAGE",
+    dispatchActions: false,
+  },
+  [getMessage]
+);
+
+store.dispatch({ type: "MESSAGE" });
+```
+
+### selectors: Selector[] = []
+
+list of selectors whose results are injected into the provided function.
+
+### params.id?: string
+
+an id that is passed into actions created by the library
+
+### params.throttle?: (f: Function) => Function
+
+an optional function that can prevent too many requests being made
+
+### params.dispatchActions?: boolean = true
+
+boolean for whether or not the library automtically generates actions when the function is called.
+
+### params.subscription?: (action, store) => boolean
+
+if passed a subscription, any actions that satify the condition will be passed as the first parameter to params.async's passedParams
+
+### params.async: (store: ReduxStore, status: Status, ...selectorResults) => (...passedParams) => Promise
+
+async function to be executed. The status contains an id (if the promise was generated), the cancelled status (it will be true if another action was fired before the first finished), onCancel callaback, and the actual promise.
+
+### Outputs:
+
+### action: (...params) => Status
+
+The action function. You can pass in any parameters
+
+### loadingSelector: () => boolean
+
+True if the most recent action has resolved or rejected
+
+### errorSelector: () => undefined | any
+
+The rejected value of the promise if any

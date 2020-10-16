@@ -1,0 +1,27 @@
+---
+title: Deprecated
+order: 99
+---
+
+## useDispatch(dispatcher: Function, id?: string): void **_ Deprecated _**
+
+This function gives the package the ability to dispatch actions. Not calling useDispatch() will cause an error to be thrown. If you would like to pass a dispatch function to a specific async selector, you can use the optional id parameter.
+
+### Example
+
+```js
+import { combineReducers, createStore } from "redux";
+import { useDispatch, createReducer } from "async-selector-kit";
+import _ from "underscore";
+
+const rootReducer = combineReducers({
+  // Your other sub-reducers go here ...
+  AsyncSelector: createReducer(),
+});
+
+export const store = createStore(rootReducer);
+// This trick may be useful in some apps.
+// This will prevent re-render events from firing to close together causing over-rendering
+const throttledDispatch = _.throttle(store.dispatch, 50);
+useDispatch(throttledDispatch);
+```
