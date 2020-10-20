@@ -1,10 +1,12 @@
 {
-  "name": "smooth-doc-starter",
+  "name": "async-selector-kit-docs",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "develop": "gatsby develop",
-    "build": "gatsby build",
+    "patch": "cp patches/404.md node_modules/smooth-doc/pages",
+    "build": "yarn patch && gatsby build && cp CNAME public",
+    "deploy": "gh-pages -d public -b gh-pages",
     "serve": "gatsby serve"
   },
   "dependencies": {

@@ -14,7 +14,7 @@ Created with Gastby
 
 1. `git checkout docs` - make sure you're on docs branch
 2. `yarn build`
-3. `./node_modules/gh-pages/bin/gh-pages.js -d public -b gh-pages`
+3. `yarn deploy`
 
 ### What we want to do
 

@@ -5,7 +5,7 @@ module.exports = {
       options: {
         name: "async-selector-kit",
         description: "Redux Async Selector Framework",
-        siteUrl: "https://example.com",
+        siteUrl: "https://async-selector-kit.js.org/",
       },
     },
   ],
