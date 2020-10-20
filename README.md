@@ -10,15 +10,15 @@ Created with Gastby
 
 ## Publishing
 
-### Currently
+### GitHub Actions
+
+- pull-requests and pushes will build and deploy to the `gh-pages` branch
+
+### Manually
 
 1. `git checkout docs` - make sure you're on docs branch
 2. `yarn build`
 3. `yarn deploy`
-
-### What we want to do
-
-- Have GitHub Actions CICD do this for us
 
 ## Created With
 
