@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "develop": "gatsby develop",
-    "patch": "cp patches/404.md node_modules/smooth-doc/pages",
+    "patch": "cp patches/404.mdx node_modules/smooth-doc/pages",
     "build": "yarn patch && gatsby build && cp CNAME public",
     "deploy": "gh-pages -d public -b gh-pages",
     "serve": "gatsby serve"
