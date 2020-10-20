@@ -13,6 +13,26 @@ We're going to assume you have redux already installed and working in your Appli
 yarn add async-selector-kit
 ```
 
+## Why Async-Selectors
+
+# What it solves
+
+Simply put, it solves the same problem normal selectors solve. It allows you to treat actions as the _implementation details_ of state. For example, if you were designing a search dropdown, the incorrect approach would be calculate the search results whenever a specific action is dispatched, say "TYPE_SEARCH_TEXT". This would be a brittle approach because if another developer adds a different action, say "CLEAR_TEXT" or "UNDO", the app will no longer function correctly. The search calculation should be done inside a selector whether it is done synchronously on the client or asynchronously on the server.
+
+On that note, here are some concrete examples of problems async-selector solves:
+
+- **Elegantly removes the boilerplate associated making an API call.** The reducers, actions, state variables, and middleware associated with getting the request status and results are replaced with a single selector.
+- **Save/Reload will work without any added code.** You need to make sure no stale data coming from an API or request statuses are persisted or you risk buggy behavior. Treating this as derived data instantly solves this problem.
+- **Undo/Redo will work without any added code.** Using selectors allow you to use derived state without knowing anything about the actions that effect it. This is critical for the scalability of more complex apps.
+- **Helps guarantee stale data is never rendered.** A common bug occurs when a new request is made but the rendered data doesn't change until the response successfully returns.
+- **Helps prevent unnecessary requests.** Since async selectors are memoized, duplicate requests won't be made.
+- **Allows debouncing/throttling of expensive selectors.** This is extremely useful because the alternative is debouncing the actions themselves or making extra state variables which can result in extremely brittle, buggy code. A common use case would be calculations performed during zoom events.
+- **Prevents over-rendering when a page loads.** In some complex apps, you make many queries when the page loads to construct the page. You can easily batch these re-render events which can improve performance on slower devices.
+- **Avoids over-use of component lifecycle methods.** Ideally, React components are just functions of props and don't contain any logic other that needed for rendering the UI. Initializing data fetches onComponentDidMount is a brittle anti-pattern than can avoided with async selectors.
+- **Allows seamless movement of code from the client to the server.** If, for example, you need to move an algorithm off the client because it is too computationally expensive, all you have to do is swap the reselect selector with an async selector. No far-reaching changes are necessary.
+
+Note: Async-Selector-Kit builds off of [async-selectors; so you may want to peruse its code as well](https://github.com/humflelump/async-selector/).
+
 ## Connect to Redux
 
 Before creating new async selectors, you must do two things. You must provide a reference to a dispatch function so re-render actions can be generated. You must have your reducer handle these actions.
