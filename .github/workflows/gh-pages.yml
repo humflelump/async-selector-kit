@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - docs
+  pull_request:
+    branches:
+      - docs
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
