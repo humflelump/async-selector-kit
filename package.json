@@ -1,6 +1,6 @@
 {
   "name": "async-selector-kit",
-  "version": "1.0.10",
+  "version": "2.0.0",
   "description": "An opinionated API to simplify using async-selector",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

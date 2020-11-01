@@ -12,24 +12,19 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var actions_1 = require("./actions");
+var actions = [
+    actions_1.PROMISE_RESOLVED,
+    actions_1.PROMISE_REJECTED,
+    actions_1.ACTION_STARTED,
+    actions_1.ACTION_FINISHED
+];
 function createReducer() {
     return function (state, action) {
         if (state === void 0) { state = {}; }
-        if (action.type === actions_1.PROMISE_RESOLVED) {
+        if (actions.includes(action.type)) {
             return __assign({}, state);
         }
-        else if (action.type === actions_1.PROMISE_REJECTED) {
-            return __assign({}, state);
-        }
-        else if (action.type === actions_1.ACTION_STARTED) {
-            return __assign({}, state);
-        }
-        else if (action.type === actions_1.ACTION_FINISHED) {
-            return __assign({}, state);
-        }
-        else {
-            return state;
-        }
+        return state;
     };
 }
 exports.createReducer = createReducer;

@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var dispatch = function (action) {
     throw new Error("A reference to a dispatch function must be supplied with useDispatch().");
 };
-var dispatcherMapping = {};
-var store = null;
 exports.getDispatcher = function (id) {
     if (id in dispatcherMapping) {
         return dispatcherMapping[id];

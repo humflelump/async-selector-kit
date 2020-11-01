@@ -1,16 +1,13 @@
 import {
   createAsyncSelectorResults,
-  useDispatch,
   throttleSelectorResults,
   createSelector,
   createAsyncSelectorWithCache,
   createThrottledSelectorResults,
-  createAsyncSelectorWithSubscription,
   createAsyncAction,
   createMiddleware,
   ACTION_STARTED,
-  ACTION_FINISHED,
-  createSubscription
+  ACTION_FINISHED
 } from "../dist/index";
 
 /* random underscore functions */
@@ -131,6 +128,10 @@ test("Tests Work", done => {
   done();
 });
 
+function makeMiddleware(dispatcher) {
+  createMiddleware()({ dispatch: dispatcher });
+}
+
 test("Basic createAsyncSelectorResults example", done => {
   let state = {
     text: "hello"
@@ -140,7 +141,7 @@ test("Basic createAsyncSelectorResults example", done => {
   const dispatch = action => {
     generatedAction = action;
   };
-  useDispatch(dispatch);
+  makeMiddleware(dispatch);
   let count = 0;
   const [getValue, waiting, error] = createAsyncSelectorResults(
     {
@@ -192,7 +193,7 @@ test("createAsyncSelectorResults onResolve, onReject, onCancel", done => {
   const dispatch = action => {
     generatedAction = action;
   };
-  useDispatch(dispatch);
+  makeMiddleware(dispatch);
   let count = 0;
   let resolved, rejected, cancelled;
   const [getValue, waiting, error] = createAsyncSelectorResults(
@@ -266,7 +267,7 @@ test("createAsyncSelectorResults forceUpdate", done => {
   const dispatch = action => {
     generatedAction = action;
   };
-  useDispatch(dispatch);
+  makeMiddleware(dispatch);
   let count = 0;
   let concat = "hi ";
   const [getValue, waiting, error, forceUpdate] = createAsyncSelectorResults(
@@ -302,7 +303,7 @@ test("createAsyncSelectorResults throttle shouldUseAsync", done => {
     text: "hello"
   };
 
-  useDispatch(action => null);
+  makeMiddleware(action => null);
   let count = 0;
   const [getValue, waiting, error] = createAsyncSelectorResults(
     {
@@ -818,47 +819,4 @@ test("createAsyncAction debounced", done => {
       }, 20);
     }, 40);
   }, 25);
-});
-
-test("createThrottledSelector", done => {
-  // const state = {
-  //   name: "mark"
-  // };
-  // const actions = [];
-  // function createMiddlewareTest() {
-  //   const middleware = createMiddleware();
-  //   const store = {
-  //     getState: () => state,
-  //     dispatch: action => actions.push(action)
-  //   };
-  //   middleware(store)(store.dispatch)({ type: "test" });
-  //   return store;
-  // }
-  // const store = createMiddlewareTest();
-  // let inputs_, setter_, current_, previous_, state_;
-  // let subscribed = false;
-  const [subscription, setter] = createSubscription({
-    id: "wowowow",
-    defaultValue: 0,
-    onSubscribe: (inputs, setter) => {
-      inputs_ = inputs;
-      setter_ = setter;
-      subscribed = true;
-    },
-    onUnsubscribe: (inputs, setter) => {
-      inputs_ = inputs;
-      setter_ = setter;
-      subscribed = false;
-    },
-    onInputsChanged: (current, previous) => {
-      current_ = current;
-      previous_ = previous;
-    },
-    onSelectorCalled: state => {
-      state_ = state;
-    }
-  });
-  expect(typeof subscription).toEqual("function");
-  expect(typeof setter).toEqual("function");
-  done();
 });

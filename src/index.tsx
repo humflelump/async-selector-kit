@@ -11,11 +11,9 @@ import { createThrottledSelectorResults } from "./createThrottledSelectorResults
 import { throttleSelector } from "./throttleSelector";
 import { throttleSelectorResults } from "./throttleSelectorResults";
 import { createReducer } from "./reducer";
-import { useDispatch } from "./useDispatch";
 import { createSelector } from "reselect";
 import { createAsyncSelector } from "async-selector";
 import { createMiddleware } from "./createMiddleware";
-import { createSubscription } from "./createSubscription";
 import { createAsyncAction } from "./createAsyncAction";
 import { SUBSCRIPTION_UPDATED } from "./actions";
 import {
@@ -24,10 +22,6 @@ import {
   actionEnded,
   actionStarted
 } from "./actions";
-import {
-  createAsyncSelectorWithSubscription,
-  notifyNewState
-} from "./createAsyncSelectorWithSubscription";
 
 export {
   promiseResolved,
@@ -46,12 +40,8 @@ export {
   createThrottledSelector,
   createThrottledSelectorResults,
   createReducer,
-  useDispatch,
   createSelector,
   createAsyncSelector,
-  createAsyncSelectorWithSubscription,
-  notifyNewState,
   createMiddleware,
-  createSubscription,
   createAsyncAction
 };

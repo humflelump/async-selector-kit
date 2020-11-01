@@ -1,27 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var useDispatch_1 = require("./useDispatch");
-var listeners = [];
+var getDispatcher_1 = require("./getDispatcher");
 var actionListeners = [];
-function addNewStateListener(listener) {
-    listeners.push(listener);
-}
-exports.addNewStateListener = addNewStateListener;
-function addNewActionListener(listener) {
+function addNewActionListener(listenerFunc, id) {
+    var listener = {
+        id: id,
+        func: listenerFunc
+    };
+    var index = actionListeners.findIndex(function (d) { return d.id === id; });
+    if (index >= 0) {
+        actionListeners.splice(index, 1);
+    }
     actionListeners.push(listener);
 }
 exports.addNewActionListener = addNewActionListener;
 function createMiddleware() {
-    var logger = function (store) { return function (next) { return function (action) {
-        useDispatch_1.useStore(store);
-        var result = next(action);
-        var nextState = store.getState();
-        actionListeners.forEach(function (f) { return f(action, store); });
-        setTimeout(function () {
-            listeners.forEach(function (f) { return f(nextState); });
-        });
-        return result;
-    }; }; };
-    return logger;
+    var middleware = function (store) {
+        getDispatcher_1.referenceStore(store);
+        return function (next) { return function (action) {
+            var result = next(action);
+            actionListeners.forEach(function (d) { return d.func(action, store); });
+            return result;
+        }; };
+    };
+    return middleware;
 }
 exports.createMiddleware = createMiddleware;

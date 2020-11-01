@@ -52,23 +52,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var async_selector_1 = __importDefault(require("async-selector"));
 var reselect_1 = require("reselect");
-var useDispatch_1 = require("./useDispatch");
+var getDispatcher_1 = require("./getDispatcher");
 var actions_1 = require("./actions");
 var createdCount = 0;
-var idSet = new Set();
-function validate(params, selectors, id, idSet) {
-    if (idSet.has(id)) {
-        throw new Error("The id \"" + id + "\" was already given to another async selector");
-    }
-    if (!params || typeof params.async !== 'function') {
-        throw new Error('No async function was passed in.');
+function validate(params, selectors) {
+    if (!params || typeof params.async !== "function") {
+        throw Error("No async function was passed in.");
     }
     if (!Array.isArray(selectors)) {
-        throw new Error("Selectors must be an array. Instead got " + typeof selectors + ".");
+        throw Error("Selectors must be an array. Instead got " + typeof selectors + ".");
     }
     for (var i = 0; i < selectors.length; i++) {
-        if (typeof selectors[i] !== 'function') {
-            throw new Error("All selectors must be functions. Instead got " + selectors.map(function (f) { return typeof f; }).join(', '));
+        if (typeof selectors[i] !== "function") {
+            throw Error("All selectors must be functions. Instead got " + selectors
+                .map(function (f) { return typeof f; })
+                .join(", "));
         }
     }
 }
@@ -76,14 +74,13 @@ function createAsyncSelectorResults(params, selectors) {
     var _this = this;
     if (selectors === void 0) { selectors = []; }
     var id = params.id || "ASYNC_SELECTOR_" + ++createdCount;
-    validate(params, selectors, id, idSet);
-    idSet.add(id);
+    validate(params, selectors);
     var asyncSelector = async_selector_1.default(__assign(__assign({}, params), { onResolve: function (_a) {
             var result = _a.result, took = _a.took;
-            useDispatch_1.getDispatcher(id)(actions_1.promiseResolved(result, took, id));
+            getDispatcher_1.getDispatcher()(actions_1.promiseResolved(result, took, id));
             params.onResolve && params.onResolve(result);
         }, onReject: function (error) {
-            useDispatch_1.getDispatcher(id)(actions_1.promiseRejected(error, id));
+            getDispatcher_1.getDispatcher()(actions_1.promiseRejected(error, id));
             params.onReject && params.onReject(error);
         }, async: function () {
             var vals = [];
@@ -106,7 +103,9 @@ function createAsyncSelectorResults(params, selectors) {
             });
         }, id: id }), selectors);
     var isWaiting = reselect_1.createSelector([asyncSelector], function (d) { return d.isWaiting; });
-    var error = reselect_1.createSelector([asyncSelector], function (d) { return d.isRejected ? d.value : null; });
+    var error = reselect_1.createSelector([asyncSelector], function (d) {
+        return d.isRejected ? d.value : null;
+    });
     var results = reselect_1.createSelector([asyncSelector], function (d) {
         if (d.previous === undefined) {
             if (params.defaultValue === undefined) {
@@ -120,11 +119,6 @@ function createAsyncSelectorResults(params, selectors) {
             return d.previous.result;
         }
     });
-    return [
-        results,
-        isWaiting,
-        error,
-        asyncSelector.forceUpdate,
-    ];
+    return [results, isWaiting, error, asyncSelector.forceUpdate];
 }
 exports.createAsyncSelectorResults = createAsyncSelectorResults;

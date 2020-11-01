@@ -1,4 +1,4 @@
-import { getStore, getDispatcher } from "./useDispatch";
+import { getStore, getDispatcher } from "./getDispatcher";
 import { actionStarted, actionEnded } from "./actions";
 import { addNewActionListener } from "./createMiddleware";
 
@@ -1662,11 +1662,18 @@ export function createAsyncAction(params: any, selectors?: any[]) {
 
   let func = params.async;
   const inputs = selectors || [];
-  const id = params.id || `ASYNC_ACTION${++c}`;
+
   const throttle = params.throttle || (f => f);
   const { subscription } = params;
   const spawnActions =
     typeof params.dispatchActions === "boolean" ? params.dispatchActions : true;
+
+  if (!params.id && subscription) {
+    // As of react-scripts 4, the subscriptions are not removed when the app restarts in dev mode
+    // So to prevent duplicate subscription, every subscription should have a (preferably) unique id
+    throw Error('An id must be provided to use subscriptions');
+  }
+  const id = params.id || `ASYNC_ACTION${++c}`;
 
   const transform = func => (...params1) => (actionState, ...params2) => {
     const oldPromise = func(...params1)(...params2);
@@ -1685,7 +1692,7 @@ export function createAsyncAction(params: any, selectors?: any[]) {
       mostRecentAction = actionCallId;
 
       if (spawnActions) {
-        getDispatcher(id)(actionStarted(params2, actionCallId, id));
+        getDispatcher()(actionStarted(params2, actionCallId, id));
       }
 
       const finish = (error_: any, result_: any) => {
@@ -1694,7 +1701,7 @@ export function createAsyncAction(params: any, selectors?: any[]) {
           loading = false;
           error = error_;
           if (spawnActions) {
-            getDispatcher(id)(actionEnded(result_, actionCallId, took, id));
+            getDispatcher()(actionEnded(result_, actionCallId, took, id));
           }
         }
         delete actionStates[actionCallId];
@@ -1734,16 +1741,7 @@ export function createAsyncAction(params: any, selectors?: any[]) {
   subscription &&
     addNewActionListener((actionObj, store) => {
       subscription(actionObj, store) && action(actionObj);
-    });
+    }, id);
 
   return [action, () => loading, () => error];
 }
-
-// const [action, loading, error] = createAsyncAction({
-//     id: 'wowowow',
-//     func: async (var, store, status) => {
-
-//     },
-// })
-
-// action('wow');

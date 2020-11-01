@@ -13,11 +13,9 @@ yarn add async-selector-kit
 
 - [createAsyncSelectorResults()](https://github.com/humflelump/async-selector-kit/wiki#createasyncselectorresultsparams-selectors-value-waiting-error-forceupdate)
 - [createAsyncAction()](https://github.com/humflelump/async-selector-kit/wiki#createasyncaction-selectors-func-throttler-id-action-loadingselector-errorselector)
-- [createSubscription()](https://github.com/humflelump/async-selector-kit/wiki#createsubscriptionid-onsubscribe-onunsubscribe-oninputschanged-onselectorcalled-selector-setter)
 - [createThrottledSelector()](https://github.com/humflelump/async-selector-kit/wiki#createthrottledselectorselectors-func-throttler-id-selector)
 - [throttleSelector()](https://github.com/humflelump/async-selector-kit/wiki#throttleselectorselector-throttler-id-selector)
 - [createAsyncSelectorWithCache()](https://github.com/humflelump/async-selector-kit/wiki#createasyncselectorwithcacheparams-selectors-value-waiting-error-forceupdate)
-- [useDispatch()](https://github.com/humflelump/async-selector-kit/wiki#usedispatchdispatcher-function-id-string-void)
 - [createReducer()](https://github.com/humflelump/async-selector-kit/wiki#createreducer-state---action--state)
 - [Miscellaneous](https://github.com/humflelump/async-selector-kit/wiki#miscellaneous)
 
@@ -275,40 +273,6 @@ True if the most recent action has resolved or rejected
 
 The rejected value of the promise if any
 
-## createSubscription(id?, onSubscribe, onUnsubscribe, onInputsChanged, onSelectorCalled): [selector, setter]
-
-You can actually put data streams (like web sockets) in your dependency graph along side selectors and async selectors. It works by monitor calls to it and if an action was dispatched, but the selector wasn't called, that means no component is subscribed. Then you can destroy the data stream until another component subscribes.
-
-```js
-import { createSubscription } from "async-selector-kit";
-
-const data = {};
-
-const getFormat = state => state.format;
-
-const [getTime, setter, getLastUpdate] = createSubscription(
-  {
-    id: "sub",
-    onSubscribe: (inputs, store) => {
-      data.interval = setInterval(() => {
-        const format = getFormat(store.getState());
-        if (format === "unix") {
-          setter(Date.now() / 1000);
-        } else {
-          setter(Date.now());
-        }
-      });
-    },
-    onUnsubscribe: (inputs, store) => {
-      clearInterval(data.interval);
-    },
-    onInputsChanged: (current, previous) => {},
-    onSelectorCalled: state => {}
-  },
-  [getFormat]
-);
-```
-
 ## createThrottledSelector(selectors, func, throttler, id?): selector
 
 A powerful technique async selectors allow you to use is delaying expensive calculations so they don't negative effect user experience. This function is very similar to reselect's createSelector except you pass in an additional throttle function. When the expensive function is ready to be computed, a re-render action will be dispatched. If the function is very expensive, you may want to consider using an async function that calls a web worker instead so it is non-blocking.
@@ -404,29 +368,6 @@ const [getValue, waiting, error] = createAsyncSelectorWithCache(
   },
   [state => state.name]
 );
-```
-
-## useDispatch(dispatcher: Function, id?: string): void **_ Deprecated _**
-
-This function gives the package the ability to dispatch actions. Not calling useDispatch() will cause an error to be thrown. If you would like to pass a dispatch function to a specific async selector, you can use the optional id parameter.
-
-### Example
-
-```js
-import { combineReducers, createStore } from "redux";
-import { useDispatch, createReducer } from "async-selector-kit";
-import _ from "underscore";
-
-const rootReducer = combineReducers({
-  // Your other sub-reducers go here ...
-  AsyncSelector: createReducer()
-});
-
-export const store = createStore(rootReducer);
-// This trick may be useful in some apps.
-// This will prevent re-render events from firing to close together causing over-rendering
-const throttledDispatch = _.throttle(store.dispatch, 50);
-useDispatch(throttledDispatch);
 ```
 
 ## createReducer(): (state = {}, action) => state

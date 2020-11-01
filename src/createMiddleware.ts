@@ -1,26 +1,32 @@
-import { useStore } from "./useDispatch";
+import { referenceStore } from "./getDispatcher";
 
-const listeners = [] as any[];
-const actionListeners = [] as any[];
+type Listener = {
+  id: string;
+  func: Function;
+};
 
-export function addNewStateListener(listener) {
-  listeners.push(listener);
-}
+const actionListeners: Listener[] = [];
 
-export function addNewActionListener(listener) {
+export function addNewActionListener(listenerFunc, id: string) {
+  const listener: Listener = {
+    id,
+    func: listenerFunc
+  };
+  const index = actionListeners.findIndex(d => d.id === id);
+  if (index >= 0) {
+    actionListeners.splice(index, 1);
+  }
   actionListeners.push(listener);
 }
 
 export function createMiddleware() {
-  const logger = store => next => action => {
-    useStore(store);
-    let result = next(action);
-    const nextState = store.getState();
-    actionListeners.forEach(f => f(action, store));
-    setTimeout(() => {
-      listeners.forEach(f => f(nextState));
-    });
-    return result;
+  const middleware = store => {
+    referenceStore(store);
+    return next => action => {
+      const result = next(action);
+      actionListeners.forEach(d => d.func(action, store));
+      return result;
+    };
   };
-  return logger;
+  return middleware;
 }

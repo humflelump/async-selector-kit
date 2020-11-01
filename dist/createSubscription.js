@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var createMiddleware_1 = require("./createMiddleware");
 var reselect_1 = require("reselect");
-var useDispatch_1 = require("./useDispatch");
+var getDispatcher_1 = require("./getDispatcher");
 var actions_1 = require("./actions");
 var createdCount = 0;
 function createSubscription(params, selectors) {
@@ -25,14 +25,14 @@ function createSubscription(params, selectors) {
     var setter = function (val) {
         value = val;
         lastUpdate = Date.now();
-        useDispatch_1.getDispatcher(id)(actions_1.subscriptionUpdated(value, id));
+        getDispatcher_1.getDispatcher(id)(actions_1.subscriptionUpdated(value, id));
     };
     var setSubscriptionState = function (bool) {
         if (bool && !isSubscribed) {
-            onSubscribe && onSubscribe(prevInputs, useDispatch_1.getStore());
+            onSubscribe && onSubscribe(prevInputs, getDispatcher_1.getStore());
         }
         else if (!bool && isSubscribed) {
-            onUnsubscribe && onUnsubscribe(prevInputs, useDispatch_1.getStore());
+            onUnsubscribe && onUnsubscribe(prevInputs, getDispatcher_1.getStore());
         }
         isSubscribed = bool;
     };

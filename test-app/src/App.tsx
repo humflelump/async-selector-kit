@@ -1,10 +1,8 @@
 import React from "react";
 import logo from "./logo.svg";
-import "./App.css";
 import { State } from "./store";
 import { useSelector, useDispatch, connect } from "react-redux";
 import { createAsyncSelectorResults } from "async-selector-kit";
-import { createSubscription } from "async-selector-kit";
 import { createAsyncAction } from "async-selector-kit";
 import { Store, ActionState } from "../../src/createAsyncAction";
 import { debounce } from "lodash";
@@ -14,6 +12,7 @@ const text = (state: State) => state.blah.text as string;
 
 const [longText, loading] = createAsyncSelectorResults(
   {
+    id: "wow",
     async: async text => {
       await new Promise(res => setTimeout(res, 500));
       return "" + text + text;
@@ -23,18 +22,18 @@ const [longText, loading] = createAsyncSelectorResults(
   [text]
 );
 
-const [newSelector] = createSubscription(
-  {
-    defaultValue: "wow",
-    onSubscribe: (inputs, setter) => {
-      console.log("onSubscribe", inputs, setter);
-    },
-    onUnsubscribe: (inputs, setter) => {
-      console.log("onSubscribe", inputs, setter);
-    }
-  },
-  []
-);
+// const [newSelector] = createSubscription(
+//   {
+//     defaultValue: "wow",
+//     onSubscribe: (inputs, setter) => {
+//       console.log("onSubscribe", inputs, setter);
+//     },
+//     onUnsubscribe: (inputs, setter) => {
+//       console.log("onSubscribe", inputs, setter);
+//     }
+//   },
+//   []
+// );
 
 // function grr<A, R>(props: { f: (a: A) => R }): (a: A, c: number) => R;
 
@@ -61,15 +60,15 @@ const [action, loadingAction, error] = createAsyncAction(
       return true;
     },
     subscription: (action, store) => {
-      console.log({ action, store });
-      return true;
+      console.log("wowowowo", { action, store });
+      return false;
     }
   },
   [(state: State) => state.async]
 );
 
 const Sub = () => {
-  useSelector(newSelector);
+  //useSelector(newSelector);
   return <div>Sub</div>;
 };
 
