@@ -1,7 +1,20 @@
-This library is built on top of [async-selector](https://github.com/humflelump/async-selector). The goal of this library is:
+# Why Async Selectors?
 
-1. **Provide a set of functions to simplify development using async-selector**
-2. **Ensure these functions are well tested and have full typescript support**
+If you understand why regular selectors are important, you already understand the value of async-selectors. As a concrete example, imagine you were implementing a search field with a dropdown, and the search logic is done in the database. A common approach would be to dispatch an action which sets the text and have some middleware (like a saga) subscribe to that action and perform the query. This seems like a reasonable approach, but it has several drawbacks:
+
+1. ) If another developer adds another action which effects the searchText variable like "UNDO" or "CLEAR", they will create a bug if they didn't know that middleware existed. For simple cases like this it may not seem a huge issue, but for complicated situations, in can be difficult to know which state variables should trigger which async requests. For example, if the search results are based on the user, and another developer adds a "Switch User" option, they would almost certainly never think to trigger a new query.
+
+2. ) You may think "Why not just have middleware listen to changes in state variables/selectors". That would help, but you lose effortless lazy evaluation. What if the search component is unmounted when the "Switch User" button is clicked? You will send an unnecessary request.
+
+3. ) You have to handle the initial fetch inside components which very brittle, error prone, and hard to do optimally. For example what if you have a parent SearchComponent that either renders a SearchDropdown or a LoadingIndicator, and then inside the SearchDropdown, you fetch data on mount if necessary. Seems like a reasonable approach. Unfortunately, if the SearchDropdown ever sends a request, you will get an infinite loop! This is because it will unmount because its loading and then remount and re-fetch data forever. Even after you fix that bug, you will still have duplicate queries when the SearchDropdown component mounts and un-mounts. If you are having such problems in even the simplest cases, clearly it isn't a good idea to manually handle data fetches and caching based on the component life-cycles.
+
+4. ) Boilerplate. May not be profound, but carpel tunnel is a real problem. Having to handle actions, reducers, state variables, etc for every single data fetch is quite a chore and some developers will just skip some steps and hope nobody notices. Async selector generate convenient selectors for data, loading, and error allowing you to spend more time actually solving problems rather than writing stupid code. You might be saying "But that's a hack! The app should be a function of state which includes all those variables." Not really. First of all, putting the data in state violates single-source-of-truth principle. The data belongs only in the database. Secondly its perfectly fine to encapsulate state inside of react components, and this isn't that different. Finally what if you implement persisting the state and reloading it back (like using redux-persist). If you don't blacklist those 3 variables (data, loading, error), you will have actually created a bug because all those variable are not relevant when the user reloads the app. It actually seems easier to argue that putting those variables in state is the hack.
+
+5. ) You will have to handle caching, throttling, and ensuring old or no-longer-relevant data is never accidentally rendered. You need to make sure that if an old request come back after a new request, so you won't render the wrong search results. Also you will probably want to debounce and cache the queries. Async selectors handle all this effortlessly.
+
+6. ) Moving the searching logic from client to server or vice versa will require quite a surgery. It will require far-reaching changes and you may be tempted to just leave the code where it is the avoid the effort. With async selectors, whether or not the search is done on the client or the server is just an implementation detail of the selector.
+
+7. ) Readability. This is obviously subjective - if you have never seen an async selector, you probably won't find them particularly readable. But because async selectors are far more constrained in what they can do compared to middleware approaches, it allows you to express intent more clearly. Additionally they result in way less code and allow clear documentation of async dependencies (without reading middleware and reducer code). Finally they play well with typescript which is a big plus.
 
 # Installation
 
