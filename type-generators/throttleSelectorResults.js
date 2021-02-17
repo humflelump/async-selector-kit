@@ -5,7 +5,7 @@ export function throttleSelectorResults<State, Return>(
   id?: string
 ): [
     (state: State) => Return,
-    (state: State) => boolean
+    () => boolean
   ];
 
 export function throttleSelectorResults<State, Props, Return, R1>(
@@ -14,6 +14,6 @@ export function throttleSelectorResults<State, Props, Return, R1>(
   id?: string
 ): [
     (state: State, props: Props) => Return,
-    (state: State, props: Props) => boolean
+    () => boolean
   ];
 `

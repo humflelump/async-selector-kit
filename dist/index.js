@@ -34,3 +34,6 @@ exports.ACTION_STARTED = actions_3.ACTION_STARTED;
 exports.ACTION_FINISHED = actions_3.ACTION_FINISHED;
 exports.actionEnded = actions_3.actionEnded;
 exports.actionStarted = actions_3.actionStarted;
+var cancellable_1 = require("./cancellable");
+exports.abortableFetch = cancellable_1.abortableFetch;
+exports.cancellable = cancellable_1.cancellable;

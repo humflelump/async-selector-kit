@@ -2,9 +2,9 @@ import React from "react";
 import logo from "./logo.svg";
 import { State } from "./store";
 import { useSelector, useDispatch, connect } from "react-redux";
-import { createAsyncSelectorResults } from "async-selector-kit";
+import { abortableFetch, createAsyncSelectorResults } from "async-selector-kit";
 import { createAsyncAction } from "async-selector-kit";
-import { Store, ActionState } from "../../src/createAsyncAction";
+// import { Store, ActionState } from "async-selector-kit";
 import { debounce } from "lodash";
 import { Action } from "redux";
 
@@ -13,8 +13,14 @@ const text = (state: State) => state.blah.text as string;
 const [longText, loading] = createAsyncSelectorResults(
   {
     id: "wow",
-    async: async text => {
+    async: async (text, status) => {
       await new Promise(res => setTimeout(res, 500));
+      const resp = await abortableFetch(status, fetch)(
+        'https://setpoint-iterator.svc.eogresources.com/env',
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+        });
       return "" + text + text;
     },
     defaultValue: ""

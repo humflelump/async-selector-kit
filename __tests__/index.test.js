@@ -13,9 +13,9 @@ import {
 /* random underscore functions */
 const _ = {};
 
-var restArguments = function(func, startIndex) {
+var restArguments = function (func, startIndex) {
   startIndex = startIndex == null ? func.length - 1 : +startIndex;
-  return function() {
+  return function () {
     var length = Math.max(arguments.length - startIndex, 0);
 
     var rest = Array(length);
@@ -41,27 +41,27 @@ var restArguments = function(func, startIndex) {
   };
 };
 
-_.delay = restArguments(function(func, wait, args) {
-  return setTimeout(function() {
+_.delay = restArguments(function (func, wait, args) {
+  return setTimeout(function () {
     return func.apply(null, args);
   }, wait);
 });
 
 _.now =
   Date.now ||
-  function() {
+  function () {
     return new Date().getTime();
   };
 
-_.debounce = function(func, wait, immediate) {
+_.debounce = function (func, wait, immediate) {
   var timeout, result;
 
-  var later = function(context, args) {
+  var later = function (context, args) {
     timeout = null;
     if (args) result = func.apply(context, args);
   };
 
-  var debounced = restArguments(function(args) {
+  var debounced = restArguments(function (args) {
     if (timeout) clearTimeout(timeout);
     if (immediate) {
       var callNow = !timeout;
@@ -74,7 +74,7 @@ _.debounce = function(func, wait, immediate) {
     return result;
   });
 
-  debounced.cancel = function() {
+  debounced.cancel = function () {
     clearTimeout(timeout);
     timeout = null;
   };
@@ -82,19 +82,19 @@ _.debounce = function(func, wait, immediate) {
   return debounced;
 };
 
-_.throttle = function(func, wait, options) {
+_.throttle = function (func, wait, options) {
   var timeout, context, args, result;
   var previous = 0;
   if (!options) options = {};
 
-  var later = function() {
+  var later = function () {
     previous = options.leading === false ? 0 : _.now();
     timeout = null;
     result = func.apply(context, args);
     if (!timeout) context = args = null;
   };
 
-  var throttled = function() {
+  var throttled = function () {
     var now = _.now();
     if (!previous && options.leading === false) previous = now;
     var remaining = wait - (now - previous);
@@ -114,7 +114,7 @@ _.throttle = function(func, wait, options) {
     return result;
   };
 
-  throttled.cancel = function() {
+  throttled.cancel = function () {
     clearTimeout(timeout);
     previous = 0;
     timeout = context = args = null;
@@ -195,10 +195,14 @@ test("createAsyncSelectorResults onResolve, onReject, onCancel", done => {
   };
   makeMiddleware(dispatch);
   let count = 0;
-  let resolved, rejected, cancelled;
+  let resolved, rejected, cancelled, cancelledText, cancelledBool
   const [getValue, waiting, error] = createAsyncSelectorResults(
     {
-      async: async function exampleApi(text) {
+      async: async function exampleApi(text, status) {
+        status.onCancel = () => {
+          cancelledText = text;
+          cancelledBool = status.cancelled;
+        }
         if (text.length > 10) {
           throw new Error("Text to long");
         }
@@ -223,6 +227,8 @@ test("createAsyncSelectorResults onResolve, onReject, onCancel", done => {
   expect(getValue({ ...state })).toBe(null);
   expect(count).toBe(0);
   expect(cancelled || resolved || rejected).toBeFalsy();
+  expect(cancelledBool).toBe(undefined);
+  expect(cancelledText).toBe(undefined);
   setTimeout(() => {
     expect(getValue({ ...state })).toBe("hi hello");
     expect(getValue({ ...state })).toBe("hi hello");
@@ -237,11 +243,15 @@ test("createAsyncSelectorResults onResolve, onReject, onCancel", done => {
     expect(Boolean(cancelled)).toBe(false);
     state = { ...state, text: "new2" };
     expect(getValue({ ...state })).toBe("hi hello");
+    expect(cancelledBool).toBe(true);
+    expect(cancelledText).toBe('new');
     expect(waiting({ ...state })).toBe(true);
     expect(Boolean(cancelled.then)).toBe(true);
     state = { ...state, text: "errorerrorerror" };
     expect(getValue({ ...state })).toBe("hi hello");
     expect(waiting({ ...state })).toBe(true);
+    expect(cancelledBool).toBe(true);
+    expect(cancelledText).toBe('new2');
     setTimeout(() => {
       try {
         expect(getValue({ ...state })).toBe("hi hello");
@@ -250,6 +260,8 @@ test("createAsyncSelectorResults onResolve, onReject, onCancel", done => {
         expect(cancelled.then).toBeTruthy();
         expect(String(rejected)).toBe("Error: Text to long");
         expect(String(generatedAction.error)).toBe("Error: Text to long");
+        expect(cancelledBool).toBe(true);
+        expect(cancelledText).toBe('new2');
         done();
       } catch (e) {
         done.fail(e);
@@ -429,7 +441,7 @@ test("throttleSelectorResults", done => {
     _.debounce(f, 100)
   );
 
-  expect(waiting({ ...state })).toBe(true);
+  expect(waiting({ ...state })).toBe(false);
   expect(getValue({ ...state })).toBe("hello hi");
   expect(waiting({ ...state, text: "new1" })).toBe(true);
   expect(getValue({ ...state, text: "new1" })).toBe("hello hi");
@@ -442,8 +454,9 @@ test("throttleSelectorResults", done => {
       try {
         expect(waiting({ ...state, text: "new2" })).toBe(false);
         expect(getValue({ ...state, text: "new2" })).toBe("new2 hi");
-        expect(waiting({ ...state, text: "new3" })).toBe(true);
+        expect(waiting({ ...state, text: "new3" })).toBe(false);
         expect(getValue({ ...state, text: "new3" })).toBe("new2 hi");
+        expect(waiting({ ...state, text: "new3" })).toBe(true);
         done();
       } catch (e) {
         done.fail(e);

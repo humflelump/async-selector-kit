@@ -1,9 +1,4 @@
-export declare type ActionState<PromiseReturn> = {
-    id: number;
-    cancelled: boolean;
-    onCancel: () => void;
-    promise: Promise<PromiseReturn>;
-};
+import { ActionState } from "./types";
 export declare type Store<State> = {
     getState: () => State;
     dispatch: (action: any) => void;

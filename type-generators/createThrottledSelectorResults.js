@@ -7,7 +7,7 @@ var list = n => {
 }
 
 // prettier-ignore
-function makeType (n) {
+function makeType(n) {
   return `
 export function createThrottledSelectorResults<State${n == 0 ? '' : ', '}${list(n).map(n => `R${n}`).join(', ')}, SyncReturn>(
   selectors: [${list(n).map(n => `(state: State) => R${n}`).join(', ')}],
@@ -16,7 +16,7 @@ export function createThrottledSelectorResults<State${n == 0 ? '' : ', '}${list(
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State${n == 0 ? '' : ','}${list(n).map(n => `R${n}`).join(', ')}, SyncReturn, Props>(
@@ -26,7 +26,7 @@ export function createThrottledSelectorResults<State${n == 0 ? '' : ','}${list(n
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
     
 `

@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 
 let createdCount = 0;
 
+
 export function createThrottledSelectorResults<State, SyncReturn>(
   selectors: [],
   func: () => SyncReturn,
@@ -10,7 +11,7 @@ export function createThrottledSelectorResults<State, SyncReturn>(
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, SyncReturn, Props>(
@@ -20,8 +21,9 @@ export function createThrottledSelectorResults<State, SyncReturn, Props>(
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
+
 
 export function createThrottledSelectorResults<State, R1, SyncReturn>(
   selectors: [(state: State) => R1],
@@ -30,7 +32,7 @@ export function createThrottledSelectorResults<State, R1, SyncReturn>(
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, SyncReturn, Props>(
@@ -40,8 +42,9 @@ export function createThrottledSelectorResults<State, R1, SyncReturn, Props>(
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
+
 
 export function createThrottledSelectorResults<State, R1, R2, SyncReturn>(
   selectors: [(state: State) => R1, (state: State) => R2],
@@ -50,7 +53,7 @@ export function createThrottledSelectorResults<State, R1, R2, SyncReturn>(
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, SyncReturn, Props>(
@@ -60,7 +63,7 @@ export function createThrottledSelectorResults<State, R1, R2, SyncReturn, Props>
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
 
 
@@ -71,7 +74,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, SyncReturn>(
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, R3, SyncReturn, Props>(
@@ -81,7 +84,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, SyncReturn, Pr
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
 
 
@@ -92,7 +95,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, SyncReturn
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, R3, R4, SyncReturn, Props>(
@@ -102,7 +105,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, SyncReturn
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
 
 
@@ -113,7 +116,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, SyncRe
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, SyncReturn, Props>(
@@ -123,7 +126,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, SyncRe
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
 
 
@@ -134,7 +137,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, Sy
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, SyncReturn, Props>(
@@ -144,7 +147,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, Sy
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
 
 
@@ -155,7 +158,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7, SyncReturn, Props>(
@@ -165,7 +168,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
 
 
@@ -176,7 +179,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7, R8, SyncReturn, Props>(
@@ -186,7 +189,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
 
 
@@ -197,7 +200,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7, R8, R9, SyncReturn, Props>(
@@ -207,7 +210,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
 
 
@@ -218,7 +221,7 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7
   id?: string,
 ): [
     (state: State) => SyncReturn,
-    (state: State) => boolean,
+    () => boolean,
   ];
 
 export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, SyncReturn, Props>(
@@ -228,8 +231,10 @@ export function createThrottledSelectorResults<State, R1, R2, R3, R4, R5, R6, R7
   id?: string,
 ): [
     (state: State, props: Props) => SyncReturn,
-    (state: State, props: Props) => boolean,
+    () => boolean,
   ];
+
+
 
 export function createThrottledSelectorResults(selectors, func, throttleFunc, id?: string) {
   id = id || 'CREATE_THROTTLED_SELECTOR_' + (++createdCount);

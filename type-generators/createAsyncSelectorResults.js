@@ -7,10 +7,10 @@ var list = n => {
 }
 
 // prettier-ignore
-function makeType (n) {
+function makeType(n) {
   return `
 export function createAsyncSelectorResults<AsyncReturn, State, ${list(n).map(n => `R${n}`)}${n == 0 ? '' : ', '}Props = undefined, DefaultValue = []>(params: {
-  async: (${list(n).map(n => `val${n}: R${n}`).join(', ')}) => Promise<AsyncReturn>;
+  async: (${list(n).map(n => `val${n}: R${n}`).concat(['status: SelectorState']).join(', ')}) => Promise<AsyncReturn>;
   onResolve?: (result: AsyncReturn) => void;
   onReject?: (error: any) => void;
   onCancel?: (promise: Promise<AsyncReturn>) => void;
@@ -20,13 +20,13 @@ export function createAsyncSelectorResults<AsyncReturn, State, ${list(n).map(n =
   defaultValue?: DefaultValue,
 }, selectors: [${list(n).map(n => `(state: State) => R${n}`).join(', ')}]): [
     (state: State) => AsyncReturn | DefaultValue,
-    (state: State) => boolean,
-    (state: State) => any | null,
+    () => boolean,
+    () => any | null,
     (state: State) => void
   ];
   
 export function createAsyncSelectorResults<AsyncReturn, State, ${list(n).map(n => `R${n}`)}${n == 0 ? '' : ', '}Props = undefined, DefaultValue = []>(params: {
-  async: (${list(n).map(n => `val${n}: R${n}`).join(', ')}) => Promise<AsyncReturn>;
+  async: (${list(n).map(n => `val${n}: R${n}`).concat(['status: SelectorState']).join(', ')}) => Promise<AsyncReturn>;
   onResolve?: (result: AsyncReturn) => void;
   onReject?: (error: any) => void;
   onCancel?: (promise: Promise<AsyncReturn>) => void;
@@ -36,8 +36,8 @@ export function createAsyncSelectorResults<AsyncReturn, State, ${list(n).map(n =
   defaultValue?: DefaultValue,
 }, selectors: [${list(n).map(n => `(state: State, props: Props) => R${n}`).join(', ')}]): [
     (state: State, props: Props) => AsyncReturn | DefaultValue,
-    (state: State, props: Props) => boolean,
-    (state: State, props: Props) => any | null,
+    () => boolean,
+    () => any | null,
     (state: State, props: Props) => void
   ];
 `

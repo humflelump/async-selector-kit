@@ -88,9 +88,13 @@ const [employees, isLoading, error] = createAsyncSelectorResults(
 
 This is the main function exposed by the library, and it provides the basic functionality for creating async selectors. The basic idea is that you pass in a list of selectors and an async function (instead of a normal function as in reselect). It outputs three selectors to access the result of the function. Whenever, the promise resolves or rejects, an action is dispatched behind the scenes which triggers the application to render the new data.
 
-### Example
+### Example 1
 
 ```js
+import { createAsyncSelectorResults } from 'async-selector-kit';
+import { getEmployees } from './api';
+import _ from 'lodash';
+
 const [employees, isLoading, error, forceUpdate] = createAsyncSelectorResults(
   {
     async: getEmployees,
@@ -106,11 +110,36 @@ const [employees, isLoading, error, forceUpdate] = createAsyncSelectorResults(
 );
 ```
 
+### Example 2 (Managing Request Cancellation)
+The final parameter of the "async" callback is a status object ```{cancelled: boolean, onCancel: () => void}```. If the existing promise is pending and a new promise is generated, the cancelled flag will be updated to true and onCancel() will be called. You can use this to halt promises and even abort network requests. This is available in version 3.0.0.
+```js
+import { createAsyncSelectorResults, abortableFetch, PromiseStatus } from 'async-selector-kit';
+
+async function getEmployees(search: string, status?: PromiseStatus) {
+  const response = await abortableFetch(status, fetch)('/employees');
+  if (status?.cancelled) return [];
+  const employees = await resp.json();
+  return employees;
+}
+
+const [employees] = createAsyncSelectorResults(
+  {
+    async: async (text, status) => {
+      status.onCancel = () => console.log('Cancelled Request', text);
+      return await getEmployees(text, status);
+    },
+    id: "myFirstAsyncSelector",
+    defaultValue: [],
+  },
+  [state => state.searchText]
+);
+```
+
 ### selectors: Selector[] = []
 
 The second parameter is an array of selectors to be used to generate the value passed into the async function.
 
-### params.async: (...values) => Promise
+### params.async: (...values, status: PromiseStatus) => Promise
 
 The async function used to generate the returned selectors. The return values of the selectors are passed into the function and it will be all any time any of the values changes.
 

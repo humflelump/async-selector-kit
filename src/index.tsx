@@ -22,6 +22,8 @@ import {
   actionEnded,
   actionStarted
 } from "./actions";
+import { abortableFetch, cancellable } from './cancellable'
+import { PromiseStatus } from './types';
 
 export {
   promiseResolved,
@@ -43,5 +45,8 @@ export {
   createSelector,
   createAsyncSelector,
   createMiddleware,
-  createAsyncAction
+  createAsyncAction,
+  abortableFetch,
+  cancellable,
+  PromiseStatus,
 };
