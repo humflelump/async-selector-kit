@@ -1,6 +1,6 @@
 {
   "name": "async-selector-kit",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "An opinionated API to simplify using async-selector",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -8,7 +8,7 @@
   "scripts": {
     "start": "tsc --watch",
     "build": "tsc",
-    "test": "jest",
+    "test": "yarn build && jest",
     "prepublish": "npm run build && npm run test"
   },
   "repository": {
