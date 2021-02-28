@@ -10,7 +10,7 @@ import { Action } from "redux";
 
 const text = (state: State) => state.blah.text as string;
 
-const [longText, loading] = createAsyncSelectorResults(
+const [longText, loading, err, forceUpdate] = createAsyncSelectorResults(
   {
     id: "wow",
     async: async (text, status) => {
@@ -54,6 +54,28 @@ const [longText, loading] = createAsyncSelectorResults(
 // const r = grr({ f: (a: string) => 5 });
 // r("");
 
+const [action2, loadingAction2, error2] = createAsyncAction(
+  {
+    id: "wowowowow",
+    async: (store, status, val) => async () => {
+      status.onCancel = () => console.log("cancelled");
+      //console.log("started", val, wow);
+      console.log("called", action);
+      await new Promise(res => setTimeout(res, 1000));
+      //console.log("ended", val, wow);
+      try {
+        const val = await forceUpdate(store.getState());
+      } catch (e) {
+        console.log({ e });
+      }
+
+
+      return true;
+    },
+  },
+  [(state: State) => state.async]
+);
+
 const [action, loadingAction, error] = createAsyncAction(
   {
     id: "wowowowow",
@@ -63,6 +85,8 @@ const [action, loadingAction, error] = createAsyncAction(
       console.log("called", action);
       await new Promise(res => setTimeout(res, 1000));
       //console.log("ended", val, wow);
+      const val = await forceUpdate(store.getState());
+      console.log({ val });
       return true;
     },
     subscription: (action, store) => {
@@ -102,6 +126,7 @@ const App: React.FC = () => {
       <button
         onClick={() => {
           dispatch({ type: "toggle" });
+          action2();
         }}
       >
         Toggle

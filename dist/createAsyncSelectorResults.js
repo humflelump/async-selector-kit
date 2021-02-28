@@ -81,12 +81,16 @@ function createAsyncSelectorResults(params, selectors) {
             activePromise = promise;
             return promise;
         }, id: id }), selectors);
-    var error = function () {
-        var d = asyncSelector.getResult();
+    var error = function (state) {
+        var d = state
+            ? asyncSelector(state)
+            : asyncSelector.getResult();
         return (d && d.isRejected) ? d.value : null;
     };
-    var isWaiting = function () {
-        var d = asyncSelector.getResult();
+    var isWaiting = function (state) {
+        var d = state
+            ? asyncSelector(state)
+            : asyncSelector.getResult();
         return Boolean(d && d.isWaiting);
     };
     var results = reselect_1.createSelector([asyncSelector], function (d) {
@@ -102,6 +106,12 @@ function createAsyncSelectorResults(params, selectors) {
             return d.previous.result;
         }
     });
-    return [results, isWaiting, error, asyncSelector.forceUpdate];
+    var forceUpdate = function (state, props) {
+        asyncSelector.forceUpdate(state, props);
+        return new Promise(function (resolve, reject) {
+            activePromise.then(function (d) { return resolve(d.result); }).catch(reject);
+        });
+    };
+    return [results, isWaiting, error, forceUpdate];
 }
 exports.createAsyncSelectorResults = createAsyncSelectorResults;

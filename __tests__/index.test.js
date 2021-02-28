@@ -296,18 +296,89 @@ test("createAsyncSelectorResults forceUpdate", done => {
     [state => state.text]
   );
   expect(getValue({ ...state })).toEqual([]);
-  expect(count).toBe(0);
   setTimeout(() => {
-    expect(getValue({ ...state })).toEqual("hi hello");
-    expect(count).toBe(1);
-    concat = "new ";
-    forceUpdate({ ...state });
-    setTimeout(() => {
-      expect(getValue({ ...state })).toEqual("new hello");
-      expect(count).toBe(2);
-      done();
-    }, 50);
+    try {
+      expect(getValue({ ...state })).toEqual("hi hello");
+      expect(count).toBe(1);
+      concat = "new ";
+      forceUpdate({ ...state });
+      setTimeout(() => {
+        try {
+          expect(getValue({ ...state })).toEqual("new hello");
+          expect(count).toBe(2);
+          done();
+        } catch (e) {
+          done.fail(e);
+        }
+      }, 50);
+    } catch (e) {
+      done.fail(e);
+    }
   }, 50);
+});
+
+
+test("createAsyncSelectorResults forceUpdate promise", done => {
+  let state = {
+    text: "hello"
+  };
+
+  let generatedAction;
+  const dispatch = action => {
+    generatedAction = action;
+  };
+  makeMiddleware(dispatch);
+  let count = 0;
+  let concat = "hi ";
+  const [getValue, waiting, error, forceUpdate] = createAsyncSelectorResults(
+    {
+      async: async function exampleApi(text) {
+        if (text.length > 10) {
+          throw new Error("Text to long");
+        }
+        await new Promise(res => setTimeout(res, 25));
+        count += 1;
+        return concat + text;
+      }
+    },
+    [state => state.text]
+  );
+  console.log('hrumph');
+  try {
+    expect(getValue({ ...state })).toEqual([]);
+    expect(getValue({ ...state })).toEqual([]);
+    expect(waiting()).toEqual(true);
+    setTimeout(() => {
+      try {
+        expect(getValue({ ...state })).toEqual('hi hello');
+        expect(waiting()).toEqual(false);
+        const promise = forceUpdate(state);
+        let result = null;
+        promise.then(text => {
+          result = text;
+        })
+        setTimeout(() => {
+          try {
+            expect(result).toEqual(null)
+            setTimeout(() => {
+              try {
+                expect(result).toEqual('hi hello')
+                done();
+              } catch (e) {
+                done.fail(e);
+              }
+            }, 25);
+          } catch (e) {
+            done.fail(e);
+          }
+        }, 10);
+      } catch (e) {
+        done.fail(e);
+      }
+    }, 35);
+  } catch (e) {
+    done.fail(e);
+  }
 });
 
 test("createAsyncSelectorResults throttle shouldUseAsync", done => {
@@ -441,7 +512,7 @@ test("throttleSelectorResults", done => {
     _.debounce(f, 100)
   );
 
-  expect(waiting({ ...state })).toBe(false);
+  expect(waiting()).toBe(false);
   expect(getValue({ ...state })).toBe("hello hi");
   expect(waiting({ ...state, text: "new1" })).toBe(true);
   expect(getValue({ ...state, text: "new1" })).toBe("hello hi");
@@ -454,7 +525,7 @@ test("throttleSelectorResults", done => {
       try {
         expect(waiting({ ...state, text: "new2" })).toBe(false);
         expect(getValue({ ...state, text: "new2" })).toBe("new2 hi");
-        expect(waiting({ ...state, text: "new3" })).toBe(false);
+        expect(waiting({ ...state, text: "new3" })).toBe(true);
         expect(getValue({ ...state, text: "new3" })).toBe("new2 hi");
         expect(waiting({ ...state, text: "new3" })).toBe(true);
         done();
