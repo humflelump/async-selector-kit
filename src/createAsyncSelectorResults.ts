@@ -426,16 +426,16 @@ export function createAsyncSelectorResults(params, selectors: any = []) {
     selectors
   );
 
-  const error = (state) => {
+  const error = (state, props) => {
     const d = state
-      ? asyncSelector(state)
+      ? asyncSelector(state, props)
       : asyncSelector.getResult();
     return (d && d.isRejected) ? d.value : null
   }
 
-  const isWaiting = (state) => {
+  const isWaiting = (state, props) => {
     const d = state
-      ? asyncSelector(state)
+      ? asyncSelector(state, props)
       : asyncSelector.getResult();
     return Boolean(d && d.isWaiting);
   }

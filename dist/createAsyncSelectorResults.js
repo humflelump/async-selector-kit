@@ -81,15 +81,15 @@ function createAsyncSelectorResults(params, selectors) {
             activePromise = promise;
             return promise;
         }, id: id }), selectors);
-    var error = function (state) {
+    var error = function (state, props) {
         var d = state
-            ? asyncSelector(state)
+            ? asyncSelector(state, props)
             : asyncSelector.getResult();
         return (d && d.isRejected) ? d.value : null;
     };
-    var isWaiting = function (state) {
+    var isWaiting = function (state, props) {
         var d = state
-            ? asyncSelector(state)
+            ? asyncSelector(state, props)
             : asyncSelector.getResult();
         return Boolean(d && d.isWaiting);
     };
