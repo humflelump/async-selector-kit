@@ -63,7 +63,7 @@ const getEmployees = searchText => {
   return new Promise(resolve => {
     const database = ["Mark Metzger", "Steve Miller"];
     setTimeout(() => {
-      resolve(database.filter(name => searchText.includes(name)));
+      resolve(database.filter(name => name.includes(searchText)));
     }, 1000);
   });
 };
